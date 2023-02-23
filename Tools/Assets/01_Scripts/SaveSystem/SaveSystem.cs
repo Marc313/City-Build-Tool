@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ public static class SaveSystem
     }*/
 
     public static string fileName = "/SaveData.txt";
-
+/*
     public static void Save(SaveData saveData)
     {
         StreamWriter writer = new StreamWriter(GetFilePath(), false);
@@ -47,6 +48,38 @@ public static class SaveSystem
         {
             File.Delete(GetFilePath());
         }
+    }*/
+
+    public static void Save(SaveData _data)
+    {
+        BinaryFormatter formatter = GetBinaryFormatter();
+
+        FileStream file = File.Create(GetFilePath());
+        formatter.Serialize(file, _data);
+        file.Flush();
+        file.Close();
+    }
+
+    public static SaveData Load ()
+    {
+        if (!SaveExists()) return null;
+
+        BinaryFormatter formatter = GetBinaryFormatter();
+        FileStream file = File.Open(GetFilePath(), FileMode.Open);
+
+        try
+        {
+            object save = formatter.Deserialize(file);
+            file.Flush();
+            file.Close();
+            return (SaveData) save;
+        }
+        catch
+        {
+            Debug.LogError($"Save File not found! Looked at: {GetFilePath()}");
+            file.Close();
+            return null;
+        }
     }
 
     public static bool SaveExists()
@@ -66,4 +99,16 @@ public static class SaveSystem
         }
     }
 
+    public static BinaryFormatter GetBinaryFormatter()
+    {
+        BinaryFormatter formatter= new BinaryFormatter();
+
+        SurrogateSelector selector = new SurrogateSelector();
+        Vector3SerializationSurrogate vectorSurrogate = new Vector3SerializationSurrogate();
+
+        selector.AddSurrogate(typeof(Vector3), new StreamingContext(StreamingContextStates.All), vectorSurrogate);
+        formatter.SurrogateSelector = selector;
+
+        return formatter;
+    }
 }
