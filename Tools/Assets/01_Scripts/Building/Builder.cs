@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;
 using UnityEngine;
 
 public class Builder : MonoBehaviour
@@ -41,6 +39,8 @@ public class Builder : MonoBehaviour
 
     private void OnStart()
     {
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
         mainCam = Camera.main;
         currentGamePrefab = roadPrefab;
         currentPrefabID = 1;
@@ -64,7 +64,7 @@ public class Builder : MonoBehaviour
                 hitPos.y = 0;
                 phantomObject.transform.position = Grid.ToGridPos(hitPos);
 
-                if (Input.GetKey(KeyCode.Mouse0))
+                if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     PlaceObject(hitPos);
                 }

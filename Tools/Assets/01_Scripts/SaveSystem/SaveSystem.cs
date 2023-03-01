@@ -1,3 +1,4 @@
+using SFB;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -54,7 +55,8 @@ public static class SaveSystem
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        FileStream file = File.Create(GetFilePath());
+        var path = StandaloneFileBrowser.SaveFilePanel("City Builder", GetDefaultDirectory(), "newCity", "txt");
+        FileStream file = File.Create(path);
         formatter.Serialize(file, _data);
         file.Flush();
         file.Close();
@@ -62,25 +64,28 @@ public static class SaveSystem
 
     public static SaveData Load ()
     {
-        if (!SaveExists()) return null;
-
-        BinaryFormatter formatter = GetBinaryFormatter();
-        FileStream file = File.Open(GetFilePath(), FileMode.Open);
-
-        try
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Title", "", "txt", false);
+        if (paths.Length > 0 && File.Exists(paths[0]))
         {
-            object save = formatter.Deserialize(file);
-            file.Flush();
-            file.Close();
-            return (SaveData) save;
+            BinaryFormatter formatter = GetBinaryFormatter();
+            FileStream file = File.Open(paths[0], FileMode.Open);
+
+            try
+            {
+                object save = formatter.Deserialize(file);
+                file.Flush();
+                file.Close();
+                return (SaveData)save;
+            }
+            catch
+            {
+                Debug.LogError($"Save File not found! Looked at: {GetFilePath()}");
+                file.Close();
+                return null;
+            }
         }
-        catch
-        {
-            Debug.LogError($"Save File not found! Looked at: {GetFilePath()}");
-            file.Close();
-            return null;
-        }
-    }
+        return null;
+}
 
     public static bool SaveExists()
     {
@@ -89,13 +94,18 @@ public static class SaveSystem
 
     public static string GetFilePath()
     {
+        return Path.Combine(GetDefaultDirectory(), fileName);
+    }
+
+    public static string GetDefaultDirectory()
+    {
         if (Application.isEditor)
         {
-            return Application.dataPath + fileName;
+            return Application.dataPath;
         }
         else
         {
-            return Application.persistentDataPath + fileName;
+            return Application.persistentDataPath;
         }
     }
 
