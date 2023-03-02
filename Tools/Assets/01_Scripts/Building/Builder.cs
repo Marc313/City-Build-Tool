@@ -12,18 +12,15 @@ public class Builder : MonoBehaviour
         Bulldozing = 3
     }
 
-    public GameObject roadPrefab;
-    public GameObject housePrefab;
-    public GameObject treePrefab;
+    public PresetLibrary library;
 
     public List<GameObject> allObjects { get; private set; }    // Obsolete?
     public List<PlacedObject> buildings { get; private set; }
 
     [SerializeField] private LayerMask buildingLayers;
 
-    private int currentPrefabID;
     private Camera mainCam;
-    private GameObject currentGamePrefab;
+    private Preset currentGamePreset;
     private GameObject phantomObject;
     private Mode buildingMode = Mode.Building;
 
@@ -41,13 +38,16 @@ public class Builder : MonoBehaviour
 
     private void OnStart()
     {
+        PresetCatalogue.presets = library.presets;
+
 /*        Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;*/
-        mainCam = Camera.main;
-        currentGamePrefab = roadPrefab;
-        currentPrefabID = 1;
 
-        phantomObject = Instantiate(currentGamePrefab);
+        mainCam = Camera.main;
+        currentGamePreset = PresetCatalogue.presets[0];
+        //currentPrefabID = 1;
+
+        phantomObject = Instantiate(currentGamePreset.prefab);
     }
 
     private void Update()
@@ -91,17 +91,9 @@ public class Builder : MonoBehaviour
         foreach (PlacedObject building in _gameObjects)
         {
             GameObject placedBuilding = null;
-            if (building.buildingId == 1)
+            if (building.presetId != null)
             {
-                placedBuilding = Instantiate(roadPrefab, building.buildingPos, Quaternion.identity);
-            }
-            if (building.buildingId == 2)
-            {
-                placedBuilding = Instantiate(housePrefab, building.buildingPos, Quaternion.identity);
-            }
-            if (building.buildingId == 3)
-            {
-                placedBuilding = Instantiate(treePrefab, building.buildingPos, Quaternion.identity);
+                placedBuilding = Instantiate(PresetCatalogue.GetPresetByID(building.presetId).prefab, building.buildingPos, Quaternion.identity);
             }
 
             if (placedBuilding != null)
@@ -121,36 +113,30 @@ public class Builder : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SetCurrentPreset(PresetManager.presets[0]);
+            SetCurrentPreset(PresetCatalogue.presets[0]);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { 
-            currentGamePrefab = housePrefab;
-            currentPrefabID = 2;
-            phantomObject.SetActive(false);
-            phantomObject = Instantiate(currentGamePrefab);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            SetCurrentPreset(PresetCatalogue.presets[1]);
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { 
-            currentGamePrefab = treePrefab;
-            currentPrefabID = 3;
-            phantomObject.SetActive(false);
-            phantomObject = Instantiate(currentGamePrefab);
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            SetCurrentPreset(PresetCatalogue.presets[2]);
         }
     }
 
     private void SetCurrentPreset(Preset _preset)
     {
-        currentGamePrefab = _preset.prefab;
-        currentPrefabID = 1;
+        currentGamePreset = _preset;
+        //currentPrefabID = 1;
         phantomObject.SetActive(false);
-        phantomObject = Instantiate(currentGamePrefab);
+        phantomObject = Instantiate(currentGamePreset.prefab);
     }
 
     private void PlaceObject(Vector3 _groundPos)
     {
         allObjects.Add(phantomObject);
-        buildings.Add(new PlacedObject(currentPrefabID, phantomObject.transform.position));
+        buildings.Add(new PlacedObject(currentGamePreset.presetID, phantomObject.transform.position));
 
         // Overwrite phantomObject so the old phantom will stay in place
-        phantomObject = Instantiate(currentGamePrefab, _groundPos, Quaternion.identity, transform);
+        phantomObject = Instantiate(currentGamePreset.prefab, _groundPos, Quaternion.identity, transform);
     }
 }

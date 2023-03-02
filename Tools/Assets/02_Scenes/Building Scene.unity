@@ -900,9 +900,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02d1c5fa7a4329840ba5f9682c4d3fa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roadPrefab: {fileID: 8241859484152324718, guid: cd033f4149577de41b18bc073ff09a68, type: 3}
-  housePrefab: {fileID: 3201412831906098408, guid: 74cf817b7a1068a4bbf9b86a159c2441, type: 3}
-  treePrefab: {fileID: 3028330203464560278, guid: 446a2df3cf7e23444a6288005c20b49b, type: 3}
+  library: {fileID: 11400000, guid: c2b250252f181654ebbed649882be4f1, type: 2}
   buildingLayers:
     serializedVersion: 2
     m_Bits: 64

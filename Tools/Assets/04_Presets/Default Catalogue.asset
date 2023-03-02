@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: Default Catalogue
   m_EditorClassIdentifier: 
   presets:
-  - prefab: {fileID: 1704884143053193787, guid: 98735bf0e14b66e418cd7b9af6017ed7, type: 3}
+  - presetID: 0
+    prefab: {fileID: 1704884143053193787, guid: 98735bf0e14b66e418cd7b9af6017ed7, type: 3}
     category: 1
-  - prefab: {fileID: 3201412831906098408, guid: 74cf817b7a1068a4bbf9b86a159c2441, type: 3}
+  - presetID: 1
+    prefab: {fileID: 3201412831906098408, guid: 74cf817b7a1068a4bbf9b86a159c2441, type: 3}
     category: 2
-  - prefab: {fileID: 3028330203464560278, guid: 446a2df3cf7e23444a6288005c20b49b, type: 3}
+  - presetID: 2
+    prefab: {fileID: 3028330203464560278, guid: 446a2df3cf7e23444a6288005c20b49b, type: 3}
     category: 3

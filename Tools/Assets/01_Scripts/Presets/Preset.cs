@@ -3,6 +3,7 @@ using UnityEngine;
 [System.Serializable]
 public class Preset
 {
+    public int presetID;
     public GameObject prefab;
     public Category category = Category.Decoration;
     
