@@ -2,7 +2,6 @@ using SFB;
 using UnityEngine;
 using UnityEngine.UI;
 using Autodesk.Fbx;
-using UnityEngine.SceneManagement;
 
 public class Exporter : MonoBehaviour
 {
@@ -52,10 +51,13 @@ public class Exporter : MonoBehaviour
             FbxNode rootNode = FbxNode.Create(fbxScene, "RootNode");
 
             // Iterate through all the game objects in the scene.
-            foreach (GameObject obj in SceneManager.GetActiveScene().GetRootGameObjects())
-            {
-                AddToFBXScene(fbxManager, fbxScene, rootNode, obj);
-            }
+
+            AddToFBXSceneRecursively(fbxManager, fbxScene, rootNode, GameObject.Find("Ground"));
+            AddToFBXSceneRecursively(fbxManager, fbxScene, rootNode, FindObjectOfType<Builder>().gameObject);
+            /*            foreach (GameObject obj in )
+                        {
+                            AddToFBXSceneRecursively(fbxManager, fbxScene, rootNode, obj);
+                        }*/
 
             // Add the root node to the scene.
             fbxScene.GetRootNode().SetName("City");
@@ -73,7 +75,7 @@ public class Exporter : MonoBehaviour
         }
     }
 
-    private void AddToFBXScene(FbxManager fbxManager, FbxScene fbxScene, FbxNode rootNode, GameObject obj)
+    private void AddToFBXSceneRecursively(FbxManager fbxManager, FbxScene fbxScene, FbxNode rootNode, GameObject obj)
     {
         MeshFilter filter = obj.GetComponent<MeshFilter>();
         if (filter != null)
@@ -102,7 +104,7 @@ public class Exporter : MonoBehaviour
         for (int i = 0; i < obj.transform.childCount; i++)
         {
             Transform child = obj.transform.GetChild(i);
-            AddToFBXScene(fbxManager, fbxScene, rootNode, child.gameObject);
+            AddToFBXSceneRecursively(fbxManager, fbxScene, rootNode, child.gameObject);
         }
     }
 

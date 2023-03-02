@@ -4,9 +4,10 @@ using UnityEngine;
 [System.Serializable]
 public class SaveData
 {
-    public List<Building> builtObjects;
+    public List<PlacedObject> builtObjects;
+    public List<Preset> presetCatalogue;
 
-    public SaveData(List<Building> _placedObjects) 
+    public SaveData(List<PlacedObject> _placedObjects) 
     { 
         builtObjects = _placedObjects;
     }

@@ -1,5 +1,3 @@
-using SFB;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,19 +24,22 @@ public class SaveManager : MonoBehaviour
 
     public void Save()
     {
-        List<Building> cityData = builder.buildings;
+        List<PlacedObject> cityData = builder.buildings;
         SaveData save = new SaveData(cityData);
 
-        SaveSystem.Save(save);
+        bool status = SaveSystem.Save(save);
 
-        Debug.Log("City Saved!");
+        if (status) Debug.Log("City Saved!");
     }
 
     public void Load()
     {
         SaveData save = SaveSystem.Load();
-        builder.Reconstruct(save.builtObjects);
+        if (save != null)
+        {
+            builder.Reconstruct(save.builtObjects);
 
-        Debug.Log("City Loaded!");
+            Debug.Log("City Loaded!");
+        }
     }
 }

@@ -3,19 +3,21 @@ using UnityEngine;
 
 public class Builder : MonoBehaviour
 {
+    // Switch to FSM
     public enum Mode
     {
         None = 0,
         Building = 1,
-        Bulldozing = 2
+        Editing = 2,
+        Bulldozing = 3
     }
 
     public GameObject roadPrefab;
     public GameObject housePrefab;
     public GameObject treePrefab;
 
-    public List<GameObject> placedObjects { get; private set; }
-    public List<Building> buildings { get; private set; }
+    public List<GameObject> allObjects { get; private set; }    // Obsolete?
+    public List<PlacedObject> buildings { get; private set; }
 
     [SerializeField] private LayerMask buildingLayers;
 
@@ -28,8 +30,8 @@ public class Builder : MonoBehaviour
 
     private void Awake()
     {
-        placedObjects = new List<GameObject>();
-        buildings = new List<Building>();
+        allObjects = new List<GameObject>();
+        buildings = new List<PlacedObject>();
     }
 
     private void Start()
@@ -39,8 +41,8 @@ public class Builder : MonoBehaviour
 
     private void OnStart()
     {
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
+/*        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;*/
         mainCam = Camera.main;
         currentGamePrefab = roadPrefab;
         currentPrefabID = 1;
@@ -60,27 +62,33 @@ public class Builder : MonoBehaviour
             if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, buildingLayers))
             {
                 Debug.Log(hit.collider.name);
+                phantomObject.SetActive(true);
                 Vector3 hitPos = hit.point;
                 hitPos.y = 0;
-                phantomObject.transform.position = Grid.ToGridPos(hitPos);
+                phantomObject.transform.position = hitPos;
+                //phantomObject.transform.position = Grid.ToGridPos(hitPos);
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
                     PlaceObject(hitPos);
                 }
             }
+            else
+            {
+                phantomObject.SetActive(false);
+            }
         }
     }
 
-    public void Reconstruct(List<Building> _gameObjects)
+    public void Reconstruct(List<PlacedObject> _gameObjects)
     {
-        foreach (GameObject placedObject in placedObjects)
+        foreach (GameObject placedObject in allObjects)
         {
             Destroy(placedObject);
         }
 
         // Build all Buildings
-        foreach (Building building in _gameObjects)
+        foreach (PlacedObject building in _gameObjects)
         {
             GameObject placedBuilding = null;
             if (building.buildingId == 1)
@@ -98,7 +106,7 @@ public class Builder : MonoBehaviour
 
             if (placedBuilding != null)
             {
-                placedObjects.Add(placedBuilding);
+                allObjects.Add(placedBuilding);
             }
         }
 
@@ -111,32 +119,38 @@ public class Builder : MonoBehaviour
     // TODO: Improve, bad performanceCode
     private void HandleSwitchInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { 
-            currentGamePrefab = roadPrefab;
-            currentPrefabID = 1;
-            phantomObject.SetActive(false);
-            phantomObject = Instantiate(roadPrefab);
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SetCurrentPreset(PresetManager.presets[0]);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) { 
             currentGamePrefab = housePrefab;
             currentPrefabID = 2;
             phantomObject.SetActive(false);
-            phantomObject = Instantiate(housePrefab);
+            phantomObject = Instantiate(currentGamePrefab);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3)) { 
             currentGamePrefab = treePrefab;
             currentPrefabID = 3;
             phantomObject.SetActive(false);
-            phantomObject = Instantiate(treePrefab);
+            phantomObject = Instantiate(currentGamePrefab);
         }
+    }
+
+    private void SetCurrentPreset(Preset _preset)
+    {
+        currentGamePrefab = _preset.prefab;
+        currentPrefabID = 1;
+        phantomObject.SetActive(false);
+        phantomObject = Instantiate(currentGamePrefab);
     }
 
     private void PlaceObject(Vector3 _groundPos)
     {
-        placedObjects.Add(phantomObject);
-        buildings.Add(new Building(currentPrefabID, phantomObject.transform.position));
+        allObjects.Add(phantomObject);
+        buildings.Add(new PlacedObject(currentPrefabID, phantomObject.transform.position));
 
         // Overwrite phantomObject so the old phantom will stay in place
-        phantomObject = Instantiate(currentGamePrefab, _groundPos, Quaternion.identity);
+        phantomObject = Instantiate(currentGamePrefab, _groundPos, Quaternion.identity, transform);
     }
 }

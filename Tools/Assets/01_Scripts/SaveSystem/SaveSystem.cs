@@ -20,51 +20,28 @@ public static class SaveSystem
         formatter.Deserialize();
     }*/
 
-    public static string fileName = "/SaveData.txt";
-/*
-    public static void Save(SaveData saveData)
-    {
-        StreamWriter writer = new StreamWriter(GetFilePath(), false);
-        writer.WriteLine(JsonUtility.ToJson(saveData, true));
-        writer.Close();
-        writer.Dispose();
-    }
+    public static string fileName = "/SaveData.cb";     // .cb extension for "City Builder"
 
-    public static SaveData Load()
-    {
-        if (!File.Exists(GetFilePath())) return null;
-
-        StreamReader reader = new StreamReader(GetFilePath());
-        SaveData data = JsonUtility.FromJson<SaveData>(reader.ReadToEnd());
-        reader.Close();
-        reader.Dispose();
-
-        return data;
-        //return new SaveData(data.DungeonSeed, data.SceneIndex);
-    }
-
-    public static void DeleteSave()
-    {
-        if (SaveExists())
-        {
-            File.Delete(GetFilePath());
-        }
-    }*/
-
-    public static void Save(SaveData _data)
+    public static bool Save(SaveData _data)
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        var path = StandaloneFileBrowser.SaveFilePanel("City Builder", GetDefaultDirectory(), "newCity", "txt");
-        FileStream file = File.Create(path);
-        formatter.Serialize(file, _data);
-        file.Flush();
-        file.Close();
+        string path = StandaloneFileBrowser.SaveFilePanel("Save Current City", GetDefaultDirectory(), "newCity", "cb");
+        if (path != null && path != string.Empty)
+        {
+            FileStream file = File.Create(path);
+            formatter.Serialize(file, _data);
+            file.Flush();
+            file.Close();
+            return true;
+        }
+
+        return false;
     }
 
     public static SaveData Load ()
     {
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Title", "", "txt", false);
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Load Current City", GetDefaultDirectory(), "cb", false);
         if (paths.Length > 0 && File.Exists(paths[0]))
         {
             BinaryFormatter formatter = GetBinaryFormatter();
