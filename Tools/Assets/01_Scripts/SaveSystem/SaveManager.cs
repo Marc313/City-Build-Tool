@@ -10,6 +10,11 @@ public class SaveManager : MonoBehaviour
         builder = FindObjectOfType<Builder>();
     }
 
+    private void Start()
+    {
+        FilepathManager.CreateUserModelDirectory();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.S))
@@ -25,7 +30,7 @@ public class SaveManager : MonoBehaviour
     public void Save()
     {
         List<PlacedObject> cityData = builder.buildings;
-        SaveData save = new SaveData(cityData);
+        SaveData save = new SaveData(cityData, PresetCatalogue.presets);
 
         bool status = SaveSystem.Save(save);
 
@@ -38,6 +43,7 @@ public class SaveManager : MonoBehaviour
         if (save != null)
         {
             builder.Reconstruct(save.builtObjects);
+            PresetCatalogue.LoadList(save.presetCatalogue);
 
             Debug.Log("City Loaded!");
         }

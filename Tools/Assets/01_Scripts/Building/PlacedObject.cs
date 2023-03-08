@@ -3,12 +3,12 @@ using UnityEngine;
 [System.Serializable]
 public class PlacedObject
 {
-    public int presetId;
+    public Preset preset;
     public Vector3 buildingPos;
 
-    public PlacedObject(int _presetID, Vector3 _buildingPosition)
+    public PlacedObject(Preset _preset, Vector3 _buildingPosition)
     {
-        presetId = _presetID;
+        preset = _preset;
         buildingPos = _buildingPosition;
     }
 }

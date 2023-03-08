@@ -4,5 +4,5 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Presets/Library")]
 public class PresetLibrary : ScriptableObject
 {
-    public List<Preset> presets;
+    public List<DefaultPreset> presets;
 }

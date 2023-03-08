@@ -99,6 +99,8 @@ public class Exporter : MonoBehaviour
                 // Add the object node as a child of the root node.
                 rootNode.AddChild(objNode);
             }
+
+            ApplyMaterials(fbxManager, obj, objNode, fbxMesh);
         }
 
         for (int i = 0; i < obj.transform.childCount; i++)
@@ -123,13 +125,49 @@ public class Exporter : MonoBehaviour
         _objNode.LclScaling.Set(scaling);
     }
 
+    private void ApplyMaterials(FbxManager _fbxManager, GameObject _obj, FbxNode _objNode, FbxMesh _fbxMesh)
+    {
+        MeshRenderer renderer = _obj.GetComponent<MeshRenderer>();
+        int materialCount = renderer.materials.Length;
+        FbxSurfacePhong[] fbxSurfacePhongs = new FbxSurfacePhong[materialCount];
+
+        // Add all materials to the fbxNode
+        for (int i = 0; i < materialCount; i++)
+        {
+            Material material = renderer.materials[i];
+            FbxSurfacePhong fbxMaterial = FbxSurfacePhong.Create(_fbxManager, material.name);
+
+            fbxMaterial.Diffuse.Set(new FbxDouble3(material.color.r, material.color.g, material.color.b));
+            fbxMaterial.DiffuseFactor.Set(material.color.a);
+            fbxMaterial.SpecularFactor.Set(material.GetFloat("_SpecularHighlights"));
+            fbxMaterial.Shininess.Set(material.GetFloat("_Shininess"));
+
+            fbxSurfacePhongs[i] = fbxMaterial;
+            _objNode.AddMaterial(fbxMaterial);
+        }
+
+        // Try to put materials in right place?
+        for (int i = 0; i < _fbxMesh.GetLayerCount(); i++)
+        {
+            FbxLayer fbxLayer = _fbxMesh.GetLayer(i);
+            FbxLayerElementMaterial fbxMaterialElement = FbxLayerElementMaterial.Create(_fbxMesh, "");
+            fbxMaterialElement.SetMappingMode(FbxLayerElement.EMappingMode.eByPolygon);
+            fbxMaterialElement.SetReferenceMode(FbxLayerElement.EReferenceMode.eIndexToDirect);
+            fbxLayer.SetMaterials(fbxMaterialElement);
+
+            for (int j = 0; j < materialCount; j++)
+            {
+                fbxMaterialElement.GetIndexArray().Add(j);
+            }
+        }
+
+    }
     private FbxMesh CopyMeshData(FbxMesh _fbxMesh, Mesh _mesh)
     {
         // Set the control points of the _mesh
         int vertexCount = _mesh.vertices.Length;
         int controlPointsCount = vertexCount / 3;
         _fbxMesh.InitControlPoints(controlPointsCount);
-
         for (int i = 0; i < vertexCount; i++)
         {
             Vector3 vertex = _mesh.vertices[i];
@@ -139,14 +177,12 @@ public class Exporter : MonoBehaviour
         // Set the polygon data of the _mesh
         int[] triangles = _mesh.triangles;
         int triangleCount = triangles.Length / 3;
-
         int polygonIndex = 0;
         for (int i = 0; i < triangleCount; i++)
         {
             int vertexIndex1 = triangles[i * 3];
             int vertexIndex2 = triangles[i * 3 + 1];
             int vertexIndex3 = triangles[i * 3 + 2];
-
             _fbxMesh.BeginPolygon(polygonIndex);
             _fbxMesh.AddPolygon(vertexIndex1);
             _fbxMesh.AddPolygon(vertexIndex2);
@@ -155,10 +191,8 @@ public class Exporter : MonoBehaviour
 
             polygonIndex++;
         }
-
         return _fbxMesh;
     }
-
     private static void SetDocumentInfo(FbxManager fbxManager, FbxScene fbxScene)
     {
         // create scene info

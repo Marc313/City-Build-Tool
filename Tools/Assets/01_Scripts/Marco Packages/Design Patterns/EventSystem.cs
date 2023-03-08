@@ -4,9 +4,7 @@ namespace MarcoHelpers
 {
     public enum EventName
     {
-        TILE_CLICKED = 0,
-        DAM_CHANGED = 1,
-        FUEL_EMPTY = 2
+        PRESETS_LOADED = 0,
     }
 
     public delegate void EventCallback(object _value);

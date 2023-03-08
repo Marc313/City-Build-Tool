@@ -18,6 +18,7 @@ public class Builder : MonoBehaviour
     public List<PlacedObject> buildings { get; private set; }
 
     [SerializeField] private LayerMask buildingLayers;
+    [SerializeField] private LayerMask objectLayers;
 
     private Camera mainCam;
     private Preset currentGamePreset;
@@ -38,20 +39,29 @@ public class Builder : MonoBehaviour
 
     private void OnStart()
     {
-        PresetCatalogue.presets = library.presets;
+/*        foreach (Preset preset in library.presets)
+        {
+            PresetCatalogue.presets.Add(preset);
+        }*/
 
-/*        Cursor.lockState = CursorLockMode.Confined;
+/*      Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;*/
 
         mainCam = Camera.main;
-        currentGamePreset = PresetCatalogue.presets[0];
-        //currentPrefabID = 1;
+        if (PresetCatalogue.presets.Count > 0)
+        {
+            currentGamePreset = PresetCatalogue.presets[0];
+            //currentPrefabID = 1;
 
-        phantomObject = Instantiate(currentGamePreset.prefab);
+            phantomObject = currentGamePreset.LoadInstance();
+        }
+
     }
 
     private void Update()
     {
+        if (phantomObject == null) return;
+
         if (buildingMode == Mode.Building)
         {
             HandleSwitchInput();
@@ -78,6 +88,18 @@ public class Builder : MonoBehaviour
                 phantomObject.SetActive(false);
             }
         }
+
+        else if (buildingMode == Mode.Editing)
+        {
+            Vector2 mousePos = Input.mousePosition;
+            RaycastHit hit;
+
+            if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, objectLayers))
+            {
+
+            }
+
+        }
     }
 
     public void Reconstruct(List<PlacedObject> _gameObjects)
@@ -91,9 +113,9 @@ public class Builder : MonoBehaviour
         foreach (PlacedObject building in _gameObjects)
         {
             GameObject placedBuilding = null;
-            if (building.presetId != null)
+            if (building.preset != null)
             {
-                placedBuilding = Instantiate(PresetCatalogue.GetPresetByID(building.presetId).prefab, building.buildingPos, Quaternion.identity);
+                placedBuilding = building.preset.LoadInstance(building.buildingPos, Quaternion.identity);
             }
 
             if (placedBuilding != null)
@@ -123,20 +145,23 @@ public class Builder : MonoBehaviour
         }
     }
 
-    private void SetCurrentPreset(Preset _preset)
+    public void SetCurrentPreset(Preset _preset)
     {
         currentGamePreset = _preset;
         //currentPrefabID = 1;
-        phantomObject.SetActive(false);
-        phantomObject = Instantiate(currentGamePreset.prefab);
+        if (phantomObject != null)
+        {
+            phantomObject.SetActive(false);
+        }
+        phantomObject = currentGamePreset.LoadInstance();
     }
 
     private void PlaceObject(Vector3 _groundPos)
     {
         allObjects.Add(phantomObject);
-        buildings.Add(new PlacedObject(currentGamePreset.presetID, phantomObject.transform.position));
+        buildings.Add(new PlacedObject(currentGamePreset, phantomObject.transform.position));
 
         // Overwrite phantomObject so the old phantom will stay in place
-        phantomObject = Instantiate(currentGamePreset.prefab, _groundPos, Quaternion.identity, transform);
+        phantomObject = currentGamePreset.LoadInstance(_groundPos, Quaternion.identity, transform);
     }
 }

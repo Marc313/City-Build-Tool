@@ -26,7 +26,7 @@ public static class SaveSystem
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        string path = StandaloneFileBrowser.SaveFilePanel("Save Current City", GetDefaultDirectory(), "newCity", "cb");
+        string path = StandaloneFileBrowser.SaveFilePanel("Save Current City", FilepathManager.GetApplicationDirectory(), "newCity", "cb");
         if (path != null && path != string.Empty)
         {
             FileStream file = File.Create(path);
@@ -41,7 +41,7 @@ public static class SaveSystem
 
     public static SaveData Load ()
     {
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Load Current City", GetDefaultDirectory(), "cb", false);
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Load Current City", FilepathManager.GetApplicationDirectory(), "cb", false);
         if (paths.Length > 0 && File.Exists(paths[0]))
         {
             BinaryFormatter formatter = GetBinaryFormatter();
@@ -71,19 +71,7 @@ public static class SaveSystem
 
     public static string GetFilePath()
     {
-        return Path.Combine(GetDefaultDirectory(), fileName);
-    }
-
-    public static string GetDefaultDirectory()
-    {
-        if (Application.isEditor)
-        {
-            return Application.dataPath;
-        }
-        else
-        {
-            return Application.persistentDataPath;
-        }
+        return Path.Combine(FilepathManager.GetApplicationDirectory(), fileName);
     }
 
     public static BinaryFormatter GetBinaryFormatter()
