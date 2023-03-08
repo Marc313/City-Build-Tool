@@ -5,7 +5,8 @@ using UnityEngine;
 
 public static class PresetCatalogue
 {
-    public static List<Preset> presets = new List<Preset>();
+    public static List<Preset> allPresets = new List<Preset>();
+    public static List<Preset> userPresets = new List<Preset>();
     public static List<DefaultPresetLink> defaultPresets = new List<DefaultPresetLink>();
 
     public static void SetDefaultPresets(List<DefaultPresetLink> _presetList, bool _addToPresets = true)
@@ -16,18 +17,21 @@ public static class PresetCatalogue
         {
             foreach (Preset preset in _presetList.Select(link => link.preset))
             {
-                presets.Add(preset);
+                allPresets.Add(preset);
             }
         }
     }
 
     public static void LoadList(List<Preset> _presetList)
     {
-        presets = _presetList;
+        userPresets = _presetList;
 
-        foreach (Preset preset in presets)
+        foreach (Preset preset in userPresets)
         {
-            Debug.Log(preset.category);
+            if (!allPresets.Contains(preset))
+            {
+                allPresets.Add(preset);
+            }
         }
 
         EventSystem.RaiseEvent(EventName.PRESETS_LOADED);
@@ -35,7 +39,7 @@ public static class PresetCatalogue
 
     public static Preset GetPresetByID(int _presetID)
     {
-        return presets.Where(p => p.presetID == _presetID).First();
+        return allPresets.Where(p => p.presetID == _presetID).First();
     }
 
     public static GameObject GetPrefabByPreset(Preset _preset)
@@ -49,12 +53,18 @@ public static class PresetCatalogue
 
     public static bool PresetWithOBJNameExits(string _objName)
     {
-        foreach (Preset preset in presets)
+        foreach (Preset preset in allPresets)
         {
             UserPreset userPreset = preset as UserPreset;
             if (userPreset != null && _objName == userPreset.objFileName) return true;
         }
 
         return false;
+    }
+
+    public static void AddNewEntry(Preset _preset)
+    {
+        userPresets.Add(_preset);
+        allPresets.Add(_preset);
     }
 }

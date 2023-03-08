@@ -30,7 +30,7 @@ public class SaveManager : MonoBehaviour
     public void Save()
     {
         List<PlacedObject> cityData = builder.buildings;
-        SaveData save = new SaveData(cityData, PresetCatalogue.presets);
+        SaveData save = new SaveData(cityData, PresetCatalogue.userPresets);
 
         bool status = SaveSystem.Save(save);
 

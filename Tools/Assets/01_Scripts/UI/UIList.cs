@@ -43,6 +43,7 @@ public class UIList
 
     public void Reset()
     {
+        lastButtonPos = default;
         foreach (GameObject element in elements)
         {
             // Delete or Object pool!

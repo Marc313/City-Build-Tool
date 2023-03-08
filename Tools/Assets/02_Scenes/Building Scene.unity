@@ -1144,7 +1144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   library: {fileID: 11400000, guid: c2b250252f181654ebbed649882be4f1, type: 2}
-  isNewProject: 0
+  isNewProject: 1
   buildingLayers:
     serializedVersion: 2
     m_Bits: 64

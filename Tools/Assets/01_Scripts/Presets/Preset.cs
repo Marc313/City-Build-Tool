@@ -11,11 +11,22 @@ public abstract class Preset
     {
         presetName = _name;
         category = _category;
-        presetID = PresetCatalogue.presets.Count;
+        presetID = PresetCatalogue.allPresets.Count;
 
         UIManager.Instance.AddPresetButton(this);
     }
-    
+
+    public override bool Equals(object obj)
+    {
+        Preset other = obj as Preset;
+        if (this != null && other != null
+            && (this.presetName == other.presetName)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public enum Category
     {
         None = 0,

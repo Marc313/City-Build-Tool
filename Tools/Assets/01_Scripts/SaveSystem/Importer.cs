@@ -40,7 +40,7 @@ public class Importer : MonoBehaviour
         if (!PresetCatalogue.PresetWithOBJNameExits(_objFileName))
         {
             Preset newPreset = new UserPreset(_objFileName.Replace(".obj", ""), Preset.Category.Road, _objFileName);
-            PresetCatalogue.presets.Add(newPreset);
+            PresetCatalogue.AddNewEntry(newPreset);
         }
         else
         {

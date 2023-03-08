@@ -44,15 +44,15 @@ public class Builder : MonoBehaviour
     private void OnStart()
     {
         // Only feed default values when project is made
-        PresetCatalogue.SetDefaultPresets(library.presets, isNewProject);
+        PresetCatalogue.SetDefaultPresets(library.presets, true);
 
         /*      Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = false;*/
 
         mainCam = Camera.main;
-        if (PresetCatalogue.presets.Count > 0)
+        if (PresetCatalogue.allPresets.Count > 0)
         {
-            currentGamePreset = PresetCatalogue.presets[0];
+            currentGamePreset = PresetCatalogue.allPresets[0];
             //currentPrefabID = 1;
 
             phantomObject = currentGamePreset.LoadInstance();
@@ -139,13 +139,13 @@ public class Builder : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SetCurrentPreset(PresetCatalogue.presets[0]);
+            SetCurrentPreset(PresetCatalogue.allPresets[0]);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            SetCurrentPreset(PresetCatalogue.presets[1]);
+            SetCurrentPreset(PresetCatalogue.allPresets[1]);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            SetCurrentPreset(PresetCatalogue.presets[2]);
+            SetCurrentPreset(PresetCatalogue.allPresets[2]);
         }
     }
 

@@ -43,7 +43,7 @@ public class UIManager : MonoBehaviour
     private void LoadPresetCatalogue(object value = null)
     {
         list.Reset();
-        foreach (Preset preset in PresetCatalogue.presets)
+        foreach (Preset preset in PresetCatalogue.allPresets)
         {
             AddPresetButton(preset);
         }
