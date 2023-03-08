@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+using MarcoHelpers;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +18,8 @@ public class Builder : MonoBehaviour
 
     public List<GameObject> allObjects { get; private set; }    // Obsolete?
     public List<PlacedObject> buildings { get; private set; }
+
+    public bool isNewProject;
 
     [SerializeField] private LayerMask buildingLayers;
     [SerializeField] private LayerMask objectLayers;
@@ -39,13 +43,11 @@ public class Builder : MonoBehaviour
 
     private void OnStart()
     {
-/*        foreach (Preset preset in library.presets)
-        {
-            PresetCatalogue.presets.Add(preset);
-        }*/
+        // Only feed default values when project is made
+        PresetCatalogue.SetDefaultPresets(library.presets, isNewProject);
 
-/*      Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;*/
+        /*      Cursor.lockState = CursorLockMode.Confined;
+                Cursor.visible = false;*/
 
         mainCam = Camera.main;
         if (PresetCatalogue.presets.Count > 0)
@@ -62,7 +64,7 @@ public class Builder : MonoBehaviour
     {
         if (phantomObject == null) return;
 
-        if (buildingMode == Mode.Building)
+        if (buildingMode == Mode.Building && !IsMouseOverUI())
         {
             HandleSwitchInput();
 
@@ -100,6 +102,8 @@ public class Builder : MonoBehaviour
             }
 
         }
+
+        if (IsMouseOverUI()) phantomObject.SetActive(false);
     }
 
     public void Reconstruct(List<PlacedObject> _gameObjects)
@@ -163,5 +167,10 @@ public class Builder : MonoBehaviour
 
         // Overwrite phantomObject so the old phantom will stay in place
         phantomObject = currentGamePreset.LoadInstance(_groundPos, Quaternion.identity, transform);
+    }
+
+    public static bool IsMouseOverUI()
+    {
+        return UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
     }
 }

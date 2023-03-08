@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEngine;
 
 [System.Serializable]
 public class DefaultPreset : Preset
@@ -9,6 +10,7 @@ public class DefaultPreset : Preset
 
     public override GameObject LoadInstance()
     {
-        throw new System.NotImplementedException();
+        GameObject prefab = PresetCatalogue.GetPrefabByPreset(this);
+        return Instantiator.Instantiate(prefab);
     }
 }

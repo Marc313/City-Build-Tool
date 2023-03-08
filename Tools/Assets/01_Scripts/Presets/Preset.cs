@@ -4,12 +4,12 @@ using UnityEngine;
 public abstract class Preset
 {
     public int presetID;
-    public string name;
+    public string presetName;
     public Category category = Category.Decoration;
 
     public Preset(string _name, Category _category)
     {
-        name = _name;
+        presetName = _name;
         category = _category;
         presetID = PresetCatalogue.presets.Count;
 
@@ -32,8 +32,8 @@ public abstract class Preset
     /// <summary>
     /// Loads and instantiates the model corresponding to this preset
     /// </summary>
-    /// <param name="_position">Position applied to the instance's transform</param>
-    /// <param name="_rotation">Rotation applied to the instance's transform</param>
+    /// <param presetName="_position">Position applied to the instance's transform</param>
+    /// <param presetName="_rotation">Rotation applied to the instance's transform</param>
     /// <returns> Returns an instance of the GameObject containing the loaded preset model </returns>
     public GameObject LoadInstance(Vector3 _position, Quaternion _rotation)
     {

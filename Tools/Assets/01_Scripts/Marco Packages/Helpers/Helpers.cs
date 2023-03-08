@@ -21,7 +21,7 @@ public static class Helpers
     /// <summary>
     /// Rounds a Vector3 to a Vector3Int
     /// </summary>
-    /// <param name="vector"> The original Vector </param>
+    /// <param presetName="vector"> The original Vector </param>
     /// <returns></returns>
     #region Vector3 Helpers
     public static Vector3Int ToVector3Int(this Vector3 vector)
@@ -34,8 +34,8 @@ public static class Helpers
     /// <summary>
     /// Sets the x value of _transform.position to _x
     /// </summary>
-    /// <param name="_transform"> Original transform </param>
-    /// <param name="_x"> New x value </param>
+    /// <param presetName="_transform"> Original transform </param>
+    /// <param presetName="_x"> New x value </param>
     public static void SetXPosition(this Transform _transform, float _x)
     {
         Vector3 newPos = _transform.position;
@@ -46,8 +46,8 @@ public static class Helpers
     /// <summary>
     /// Sets the y value of _transform.position to _y
     /// </summary>
-    /// <param name="_transform"> Original transform </param>
-    /// <param name="_y"> New y value </param>
+    /// <param presetName="_transform"> Original transform </param>
+    /// <param presetName="_y"> New y value </param>
     public static void SetYPosition(this Transform _transform, float _y)
     {
         Vector3 newPos = _transform.position;
@@ -58,8 +58,8 @@ public static class Helpers
     /// <summary>
     /// Sets the z value of _transform.position to _z
     /// </summary>
-    /// <param name="_transform"> Original transform </param>
-    /// <param name="_z"> New z value </param>
+    /// <param presetName="_transform"> Original transform </param>
+    /// <param presetName="_z"> New z value </param>
     public static void SetZPosition(this Transform _transform, float _z)
     {
         Vector3 newPos = _transform.position;

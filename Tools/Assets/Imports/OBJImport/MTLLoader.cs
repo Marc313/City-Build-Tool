@@ -25,8 +25,8 @@ public class MTLLoader {
     /// <summary>
     /// The texture loading function. Overridable for stream loading purposes.
     /// </summary>
-    /// <param name="path">The path supplied by the OBJ file, converted to OS path seperation</param>
-    /// <param name="isNormalMap">Whether the loader is requesting we convert this into a normal map</param>
+    /// <param presetName="path">The path supplied by the OBJ file, converted to OS path seperation</param>
+    /// <param presetName="isNormalMap">Whether the loader is requesting we convert this into a normal map</param>
     /// <returns>Texture2D if found, or NULL if missing</returns>
     public virtual Texture2D TextureLoadFunction(string path, bool isNormalMap)
     {
@@ -130,7 +130,7 @@ public class MTLLoader {
     /// <summary>
     /// Loads a *.mtl file
     /// </summary>
-    /// <param name="input">The input stream from the MTL file</param>
+    /// <param presetName="input">The input stream from the MTL file</param>
     /// <returns>Dictionary containing loaded materials</returns>
     public Dictionary<string, Material> Load(Stream input)
     {
@@ -291,7 +291,7 @@ public class MTLLoader {
     /// <summary>
     /// Loads a *.mtl file
     /// </summary>
-    /// <param name="path">The path to the MTL file</param>
+    /// <param presetName="path">The path to the MTL file</param>
     /// <returns>Dictionary containing loaded materials</returns>
 	public Dictionary<string, Material> Load(string path)
     {

@@ -54,6 +54,6 @@ public class UIManager : MonoBehaviour
         Button button = list.AddElement().GetComponent<Button>();
         TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
         button.onClick.AddListener(() => builder.SetCurrentPreset(_preset));
-        buttonText.text = _preset.name;
+        buttonText.text = _preset.presetName;
     }
 }

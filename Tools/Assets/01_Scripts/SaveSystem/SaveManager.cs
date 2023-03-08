@@ -42,8 +42,8 @@ public class SaveManager : MonoBehaviour
         SaveData save = SaveSystem.Load();
         if (save != null)
         {
-            builder.Reconstruct(save.builtObjects);
             PresetCatalogue.LoadList(save.presetCatalogue);
+            builder.Reconstruct(save.builtObjects);
 
             Debug.Log("City Loaded!");
         }

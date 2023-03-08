@@ -4,5 +4,12 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Presets/Library")]
 public class PresetLibrary : ScriptableObject
 {
-    public List<DefaultPreset> presets;
+    public List<DefaultPresetLink> presets;
+}
+
+[System.Serializable]
+public struct DefaultPresetLink
+{
+    public DefaultPreset preset;
+    public GameObject prefab;
 }
