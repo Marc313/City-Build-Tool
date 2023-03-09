@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace MarcoHelpers
@@ -5,6 +6,7 @@ namespace MarcoHelpers
     public enum EventName
     {
         PRESETS_LOADED = 0,
+        TAB_CHANGED = 1
     }
 
     public delegate void EventCallback(object _value);
@@ -42,5 +44,41 @@ namespace MarcoHelpers
             }
         }
     }
+
+    //public delegate void EventCallback(object _value);
+
+    /*    public static class EventSystem
+        {
+            private static Dictionary<EventName, List<Action>> eventRegister = new Dictionary<EventName, List<Action>>();
+
+            public static void Subscribe(EventName _evt, Action _func)
+            {
+                if (!eventRegister.ContainsKey(_evt))
+                {
+                    eventRegister[_evt] = new List<Action>();
+                }
+
+                eventRegister[_evt].Add(_func);
+            }
+
+            public static void Unsubscribe(EventName _evt, Action _func)
+            {
+                if (eventRegister.ContainsKey(_evt))
+                {
+                    eventRegister[_evt].Remove(_func);
+                }
+            }
+
+            public static void RaiseEvent(EventName _evt, object _value = null)
+            {
+                if (eventRegister.ContainsKey(_evt))
+                {
+                    foreach (Action e in eventRegister[_evt])
+                    {
+                        e.Invoke();
+                    }
+                }
+            }
+        }*/
 } 
 

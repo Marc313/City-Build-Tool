@@ -64,7 +64,7 @@ public class Builder : MonoBehaviour
     {
         if (phantomObject == null) return;
 
-        if (buildingMode == Mode.Building && !IsMouseOverUI())
+        if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
         {
             HandleSwitchInput();
 
@@ -100,10 +100,9 @@ public class Builder : MonoBehaviour
             {
 
             }
-
         }
 
-        if (IsMouseOverUI()) phantomObject.SetActive(false);
+        if (CursorManager.IsMouseOverUI()) phantomObject.SetActive(false);
     }
 
     public void Reconstruct(List<PlacedObject> _gameObjects)
@@ -167,10 +166,5 @@ public class Builder : MonoBehaviour
 
         // Overwrite phantomObject so the old phantom will stay in place
         phantomObject = currentGamePreset.LoadInstance(_groundPos, Quaternion.identity, transform);
-    }
-
-    public static bool IsMouseOverUI()
-    {
-        return UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
     }
 }

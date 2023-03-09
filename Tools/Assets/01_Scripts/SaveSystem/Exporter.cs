@@ -7,7 +7,7 @@ public class Exporter : MonoBehaviour
 {
     //Make sure to attach these Buttons in the Inspector
     public Button exportButton;
-    public string fileName = "DemoScene.fbx";
+    public string fileName = "City.fbx";
 
     private void Start()
     {
@@ -18,7 +18,7 @@ public class Exporter : MonoBehaviour
     private void ExportFBXScene()
     {
         // Build the fbx scene file path 
-        string fbxFilePath = StandaloneFileBrowser.SaveFilePanel("Export City", "", "city.fbx", "fbx");
+        string fbxFilePath = StandaloneFileBrowser.SaveFilePanel("Export City", "", fileName, "fbx");
         Debug.Log(string.Format("The file that will be written is {0}", fbxFilePath));
 
         using (var fbxManager = FbxManager.Create())
@@ -146,7 +146,7 @@ public class Exporter : MonoBehaviour
             _objNode.AddMaterial(fbxMaterial);
         }
 
-        // Try to put materials in right place?
+/*        // Try to put materials in right place?
         for (int i = 0; i < _fbxMesh.GetLayerCount(); i++)
         {
             FbxLayer fbxLayer = _fbxMesh.GetLayer(i);
@@ -159,7 +159,7 @@ public class Exporter : MonoBehaviour
             {
                 fbxMaterialElement.GetIndexArray().Add(j);
             }
-        }
+        }*/
 
     }
     private FbxMesh CopyMeshData(FbxMesh _fbxMesh, Mesh _mesh)

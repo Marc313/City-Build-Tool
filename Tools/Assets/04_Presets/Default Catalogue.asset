@@ -13,18 +13,6 @@ MonoBehaviour:
   m_Name: Default Catalogue
   m_EditorClassIdentifier: 
   presets:
-  - preset:
-      presetID: 0
-      presetName: Road
-      category: 1
-    prefab: {fileID: 1704884143053193787, guid: 98735bf0e14b66e418cd7b9af6017ed7, type: 3}
-  - preset:
-      presetID: 1
-      presetName: House
-      category: 2
-    prefab: {fileID: 3201412831906098408, guid: 74cf817b7a1068a4bbf9b86a159c2441, type: 3}
-  - preset:
-      presetID: 2
-      presetName: Tree
-      category: 3
-    prefab: {fileID: 3028330203464560278, guid: 446a2df3cf7e23444a6288005c20b49b, type: 3}
+  - {fileID: 11400000, guid: ed6249b08ac547c4b80cfa79e4cd6cef, type: 2}
+  - {fileID: 11400000, guid: bc8a8cc2a78ae5248adfb1e9c26a2ec9, type: 2}
+  - {fileID: 11400000, guid: 280df891e1362c948a9b5980035ac4b9, type: 2}
