@@ -1,3 +1,4 @@
+using Ookii.Dialogs;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -51,5 +52,10 @@ public class UIList
         }
 
         elements = new List<GameObject>();
+    }
+
+    public void EnableParent(bool _enabled)
+    {
+        parent.SetActive(_enabled);
     }
 }

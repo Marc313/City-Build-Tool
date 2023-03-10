@@ -17,9 +17,12 @@ public static class PresetCatalogue
         {
             foreach (Preset preset in _presetList.Select(link => link.preset))
             {
+                preset.presetID = GetFirstAvailableID();
                 allPresets.Add(preset);
             }
         }
+
+        EventSystem.RaiseEvent(EventName.PRESETS_LOADED);
     }
 
     public static void LoadList(List<Preset> _presetList)
@@ -66,5 +69,11 @@ public static class PresetCatalogue
     {
         userPresets.Add(_preset);
         allPresets.Add(_preset);
+    }
+
+    public static int GetFirstAvailableID()
+    {
+        if (allPresets == null) return -1;
+        return allPresets.Count;
     }
 }

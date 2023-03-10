@@ -11,6 +11,7 @@ public class DefaultPreset : Preset
     public override GameObject LoadInstance()
     {
         GameObject prefab = PresetCatalogue.GetPrefabByPreset(this);
-        return Instantiator.Instantiate(prefab);
+        GameObject result = Instantiator.Instantiate(prefab);
+        return ApplyScaling(result);
     }
 }

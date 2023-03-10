@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: New Default Preset Link
   m_EditorClassIdentifier: Assembly-CSharp::DefaultPresetLink
   preset:
-    presetID: 2
-    presetName: Deco
-    category: 3
-  prefab: {fileID: 100000, guid: b7b25ddf67459694cbc4f58af76945b2, type: 3}
+    presetID: 3
+    presetName: Road1
+    category: 1
+    XZSizeUnits: {x: 1, y: 1}
+  prefab: {fileID: 100000, guid: 161dbbb4309c9eb4081f7e6636fbf826, type: 3}

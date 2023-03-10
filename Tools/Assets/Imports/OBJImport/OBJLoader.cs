@@ -73,7 +73,7 @@ namespace Dummiesman
         /// <summary>
         /// Helper function to load mtllib statements
         /// </summary>
-        /// <param presetName="mtlLibPath"></param>
+        /// <param presetNameField="mtlLibPath"></param>
         private void LoadMaterialLibrary(string mtlLibPath)
         {
             if (_objInfo != null)
@@ -95,7 +95,7 @@ namespace Dummiesman
         /// <summary>
         /// Load an OBJ file from a stream. No materials will be loaded, and will instead be supplemented by a blank white material.
         /// </summary>
-        /// <param presetName="input">Input OBJ stream</param>
+        /// <param presetNameField="input">Input OBJ stream</param>
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(Stream input)
         {
@@ -281,8 +281,8 @@ namespace Dummiesman
         /// <summary>
         /// Load an OBJ and MTL file from a stream.
         /// </summary>
-        /// <param presetName="input">Input OBJ stream</param>
-        /// /// <param presetName="mtlInput">Input MTL stream</param>
+        /// <param presetNameField="input">Input OBJ stream</param>
+        /// /// <param presetNameField="mtlInput">Input MTL stream</param>
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(Stream input, Stream mtlInput)
         {
@@ -295,8 +295,8 @@ namespace Dummiesman
         /// <summary>
         /// Load an OBJ and MTL file from a file path.
         /// </summary>
-        /// <param presetName="path">Input OBJ path</param>
-        /// /// <param presetName="mtlPath">Input MTL path</param>
+        /// <param presetNameField="path">Input OBJ path</param>
+        /// /// <param presetNameField="mtlPath">Input MTL path</param>
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(string path, string mtlPath)
         {
@@ -323,7 +323,7 @@ namespace Dummiesman
         /// <summary>
         /// Load an OBJ file from a file path. This function will also attempt to load the MTL defined in the OBJ file.
         /// </summary>
-        /// <param presetName="path">Input OBJ path</param>
+        /// <param presetNameField="path">Input OBJ path</param>
         /// <returns>Returns a GameObject represeting the OBJ file, with each imported object as a child.</returns>
         public GameObject Load(string path)
         {

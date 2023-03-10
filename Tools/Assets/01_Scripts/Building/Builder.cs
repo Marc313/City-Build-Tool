@@ -1,7 +1,7 @@
-using JetBrains.Annotations;
-using MarcoHelpers;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Builder : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class Builder : MonoBehaviour
     public List<GameObject> allObjects { get; private set; }    // Obsolete?
     public List<PlacedObject> buildings { get; private set; }
 
-    public bool isNewProject;
+    public bool isGridEnabled;
 
     [SerializeField] private LayerMask buildingLayers;
     [SerializeField] private LayerMask objectLayers;
@@ -34,6 +34,9 @@ public class Builder : MonoBehaviour
     {
         allObjects = new List<GameObject>();
         buildings = new List<PlacedObject>();
+
+        // Only feed default values when project is made
+        PresetCatalogue.SetDefaultPresets(library.presets, true);
     }
 
     private void Start()
@@ -43,8 +46,6 @@ public class Builder : MonoBehaviour
 
     private void OnStart()
     {
-        // Only feed default values when project is made
-        PresetCatalogue.SetDefaultPresets(library.presets, true);
 
         /*      Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = false;*/
@@ -73,12 +74,11 @@ public class Builder : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, buildingLayers))
             {
-                Debug.Log(hit.collider.name);
                 phantomObject.SetActive(true);
                 Vector3 hitPos = hit.point;
                 hitPos.y = 0;
-                phantomObject.transform.position = hitPos;
-                //phantomObject.transform.position = Grid.ToGridPos(hitPos);
+                if (!isGridEnabled) phantomObject.transform.position = hitPos;
+                else phantomObject.transform.position = Grid.ToGridPos(hitPos);
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
@@ -103,6 +103,8 @@ public class Builder : MonoBehaviour
         }
 
         if (CursorManager.IsMouseOverUI()) phantomObject.SetActive(false);
+
+        HandleRotationInput();
     }
 
     public void Reconstruct(List<PlacedObject> _gameObjects)
@@ -118,7 +120,7 @@ public class Builder : MonoBehaviour
             GameObject placedBuilding = null;
             if (building.preset != null)
             {
-                placedBuilding = building.preset.LoadInstance(building.buildingPos, Quaternion.identity);
+                placedBuilding = building.preset.LoadInstance(building.buildingPos);
             }
 
             if (placedBuilding != null)
@@ -133,7 +135,6 @@ public class Builder : MonoBehaviour
         Debug.Log("Done Reconstructing");
     }
 
-    // TODO: Improve, bad performanceCode
     private void HandleSwitchInput()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -151,12 +152,20 @@ public class Builder : MonoBehaviour
     public void SetCurrentPreset(Preset _preset)
     {
         currentGamePreset = _preset;
-        //currentPrefabID = 1;
         if (phantomObject != null)
         {
             phantomObject.SetActive(false);
         }
         phantomObject = currentGamePreset.LoadInstance();
+    }
+
+    private void HandleRotationInput()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            Debug.Log("Rotate");
+            phantomObject.RotateYToRight(90);
+        }
     }
 
     private void PlaceObject(Vector3 _groundPos)
@@ -165,6 +174,6 @@ public class Builder : MonoBehaviour
         buildings.Add(new PlacedObject(currentGamePreset, phantomObject.transform.position));
 
         // Overwrite phantomObject so the old phantom will stay in place
-        phantomObject = currentGamePreset.LoadInstance(_groundPos, Quaternion.identity, transform);
+        phantomObject = currentGamePreset.LoadInstance(_groundPos, transform);
     }
 }

@@ -8,9 +8,9 @@ public class MovingObject : MonoBehaviour
     /// <summary>
     /// Moves the current object from oldPos to a new position within a given period of time.
     /// </summary>
-    /// <param presetName="oldPos"></param>
-    /// <param presetName="targetPos"></param>
-    /// <param presetName="timeInSeconds"></param>
+    /// <param presetNameField="oldPos"></param>
+    /// <param presetNameField="targetPos"></param>
+    /// <param presetNameField="timeInSeconds"></param>
     public async Task MoveToInSeconds(Vector3 oldPos, Vector3 targetPos, float timeInSeconds)
     {
         transform.position = oldPos;

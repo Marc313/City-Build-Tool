@@ -21,7 +21,7 @@ public static class Helpers
     /// <summary>
     /// Rounds a Vector3 to a Vector3Int
     /// </summary>
-    /// <param presetName="vector"> The original Vector </param>
+    /// <param presetNameField="vector"> The original Vector </param>
     /// <returns></returns>
     #region Vector3 Helpers
     public static Vector3Int ToVector3Int(this Vector3 vector)
@@ -34,8 +34,8 @@ public static class Helpers
     /// <summary>
     /// Sets the x value of _transform.position to _x
     /// </summary>
-    /// <param presetName="_transform"> Original transform </param>
-    /// <param presetName="_x"> New x value </param>
+    /// <param presetNameField="_transform"> Original transform </param>
+    /// <param presetNameField="_x"> New x value </param>
     public static void SetXPosition(this Transform _transform, float _x)
     {
         Vector3 newPos = _transform.position;
@@ -46,8 +46,8 @@ public static class Helpers
     /// <summary>
     /// Sets the y value of _transform.position to _y
     /// </summary>
-    /// <param presetName="_transform"> Original transform </param>
-    /// <param presetName="_y"> New y value </param>
+    /// <param presetNameField="_transform"> Original transform </param>
+    /// <param presetNameField="_y"> New y value </param>
     public static void SetYPosition(this Transform _transform, float _y)
     {
         Vector3 newPos = _transform.position;
@@ -58,13 +58,22 @@ public static class Helpers
     /// <summary>
     /// Sets the z value of _transform.position to _z
     /// </summary>
-    /// <param presetName="_transform"> Original transform </param>
-    /// <param presetName="_z"> New z value </param>
+    /// <param presetNameField="_transform"> Original transform </param>
+    /// <param presetNameField="_z"> New z value </param>
     public static void SetZPosition(this Transform _transform, float _z)
     {
         Vector3 newPos = _transform.position;
         newPos.x = _z;
         _transform.position = newPos;
+    }
+    #endregion
+
+    #region GameObject Helpers
+    public static void RotateYToRight(this GameObject _object, float _angle)
+    {
+        Vector3 euler = _object.transform.rotation.eulerAngles;
+        euler.y += _angle;
+        _object.transform.rotation = Quaternion.Euler(euler);
     }
     #endregion
 }

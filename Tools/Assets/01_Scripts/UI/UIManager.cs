@@ -1,5 +1,6 @@
 using MarcoHelpers;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,12 +8,18 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
-    public GameObject quickUI;
-    public GameObject buttonPrefab;
-    public int elementOffset = 200;
+
+    [Header("Preset Menu")]
+    [SerializeField] private GameObject quickUI;
+    [SerializeField] private GameObject buttonPrefab;
+    [SerializeField] private Transform uiListStartPos;
+    [SerializeField] private int elementOffset = 200;
 
     private Builder builder;
-    private UIList list;
+    private Dictionary<Preset.Category, UIList> uiLists;
+    private UIList currentlyVisiblePresetList;
+
+    //private UIList list;
 
     private void Awake()
     {
@@ -22,53 +29,73 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        list = new UIList(buttonPrefab, quickUI, elementOffset, Vector3.right);
-        Invoke(nameof(OnStart), .1f);   
+        //OnStart();
+        //Invoke(nameof(OnStart), .1f);   
     }
 
     private void OnEnable()
     {
-        //EventSystem.Subscribe(EventName.PRESETS_LOADED, LoadPresetCatalogue);
+        EventSystem.Subscribe(EventName.PRESETS_LOADED, LoadPresetCatalogue);
         EventSystem.Subscribe(EventName.TAB_CHANGED, OnTabChanged);
     }
 
     private void OnDisable()
     {
-        //EventSystem.Unsubscribe(EventName.PRESETS_LOADED, LoadPresetCatalogue);
+        EventSystem.Unsubscribe(EventName.PRESETS_LOADED, LoadPresetCatalogue);
         EventSystem.Unsubscribe(EventName.TAB_CHANGED, OnTabChanged);
 
     }
 
     private void OnStart()
     {
-        //LoadPresetCatalogue();
+        LoadPresetCatalogue();
     }
 
     private void LoadPresetCatalogue(object value = null)
     {
-        list.Reset();
+        uiLists = new Dictionary<Preset.Category, UIList>();
+
+        for (int i = 1; i < Enum.GetValues(typeof(Preset.Category)).Length; i++)
+        {
+            Preset.Category category = (Preset.Category)i;
+            string buttonParentName = $"{category.ToString().ToLower()}Buttons";
+            GameObject buttonParent = CreateButtonParent(buttonParentName);
+            uiLists[category] = new UIList(buttonPrefab, buttonParent, elementOffset, Vector3.right);
+        }
+
         foreach (Preset preset in PresetCatalogue.allPresets)
         {
             AddPresetButton(preset);
         }
     }
 
+    private GameObject CreateButtonParent(string buttonParentName)
+    {
+        GameObject buttonParent = new GameObject(buttonParentName);
+        buttonParent.transform.position = uiListStartPos.position;
+        buttonParent.transform.parent = quickUI.transform;
+        buttonParent.SetActive(false);
+        return buttonParent;
+    }
+
     public void AddPresetButton(Preset _preset)
     {
-        Button button = list.AddElement().GetComponent<Button>();
-        TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
+        UIList categoryList = uiLists[_preset.category];
+        Button button = categoryList.AddElement().GetComponent<Button>();
         button.onClick.AddListener(() => builder.SetCurrentPreset(_preset));
+        TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
         buttonText.text = _preset.presetName;
     }
 
     private void OnTabChanged(object _value = null)
     {
-        Preset.Category _category = (Preset.Category) _value;
-        list.Reset();
-        foreach (Preset preset in PresetCatalogue.allPresets)
-        {
-            if (preset.category == _category)
-            AddPresetButton(preset);
-        }
+        if (uiLists == null) return;
+
+        Preset.Category category = (Preset.Category) _value;
+        UIList categoryList = uiLists[category];
+        currentlyVisiblePresetList?.EnableParent(false);
+        categoryList?.EnableParent(true);
+
+        currentlyVisiblePresetList = categoryList;
     }
 }

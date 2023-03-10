@@ -47,10 +47,10 @@ namespace Dummiesman
         /// <summary>
         /// A cluster for creating arrays of Unity Color 
         /// </summary>
-        /// <param presetName="fillArray"></param>
-        /// <param presetName="pixelData"></param>
-        /// <param presetName="bytesPerPixel"></param>
-        /// <param presetName="bgra"></param>
+        /// <param presetNameField="fillArray"></param>
+        /// <param presetNameField="pixelData"></param>
+        /// <param presetNameField="bytesPerPixel"></param>
+        /// <param presetNameField="bgra"></param>
         public static void FillPixelArray(Color32[] fillArray, byte[] pixelData, int bytesPerPixel, bool bgra = false)
         {
             //special case for TGA :(

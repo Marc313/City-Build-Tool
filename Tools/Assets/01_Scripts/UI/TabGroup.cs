@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using MarcoHelpers;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,7 +13,6 @@ public class TabGroup : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(tabButtons);
         if (tabButtons != null && tabButtons.Count > 0)
         {
             OnTabSelected(tabButtons[0]);

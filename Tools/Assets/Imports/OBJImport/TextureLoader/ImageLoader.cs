@@ -16,7 +16,7 @@ namespace Dummiesman
         /// <summary>
         /// Converts a DirectX normal map to Unitys expected format
         /// </summary>
-        /// <param presetName="tex">Texture to convert</param>
+        /// <param presetNameField="tex">Texture to convert</param>
         public static void SetNormalMap(ref Texture2D tex)
         {
             Color[] pixels = tex.GetPixels();
@@ -45,8 +45,8 @@ namespace Dummiesman
         /// <summary>
         /// Loads a texture from a stream
         /// </summary>
-        /// <param presetName="stream">The stream</param>
-        /// <param presetName="format">The format **NOT UNITYENGINE.TEXTUREFORMAT**</param>
+        /// <param presetNameField="stream">The stream</param>
+        /// <param presetNameField="format">The format **NOT UNITYENGINE.TEXTUREFORMAT**</param>
         /// <returns></returns>
         public static Texture2D LoadTexture(Stream stream, TextureFormat format)
         {
@@ -81,8 +81,8 @@ namespace Dummiesman
         /// <summary>
         /// Loads a texture from a file
         /// </summary>
-        /// <param presetName="fn"></param>
-        /// <param presetName="normalMap"></param>
+        /// <param presetNameField="fn"></param>
+        /// <param presetNameField="normalMap"></param>
         /// <returns></returns>
         public static Texture2D LoadTexture(string fn)
         {
