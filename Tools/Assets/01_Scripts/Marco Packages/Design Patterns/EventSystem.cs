@@ -6,7 +6,9 @@ namespace MarcoHelpers
     public enum EventName
     {
         PRESETS_LOADED = 0,
-        TAB_CHANGED = 1
+        TAB_CHANGED = 1,
+        ON_OBJNAME_ALREADY_EXISTS = 2,
+        IMPORT_SUCCESS = 3
     }
 
     public delegate void EventCallback(object _value);

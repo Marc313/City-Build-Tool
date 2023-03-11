@@ -1,10 +1,13 @@
+using MarcoHelpers;
 using SFB;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using EventSystem = UnityEngine.EventSystems.EventSystem;
 
 public class PresetMenu : MonoBehaviour
 {
@@ -17,6 +20,9 @@ public class PresetMenu : MonoBehaviour
     [SerializeField] private Button submitButton;
     [SerializeField] private Button cancelButton;
 
+    [SerializeField] private GameObject errorMenu;
+
+    private List<TMP_InputField> inputFields = new List<TMP_InputField>();
     private EventSystem system;
     private bool isEnabled;
     private Preset.Category currentCategory;
@@ -27,8 +33,24 @@ public class PresetMenu : MonoBehaviour
         SetupFields();
     }
 
+    private void OnEnable()
+    {
+        MarcoHelpers.EventSystem.Subscribe(EventName.ON_OBJNAME_ALREADY_EXISTS, ShowDuplicationError);
+        MarcoHelpers.EventSystem.Subscribe(EventName.IMPORT_SUCCESS, OnImportSucces);
+    }
+
+    private void OnDisable()
+    {
+        MarcoHelpers.EventSystem.Unsubscribe(EventName.ON_OBJNAME_ALREADY_EXISTS, ShowDuplicationError);
+        MarcoHelpers.EventSystem.Unsubscribe(EventName.IMPORT_SUCCESS, OnImportSucces);
+    }
+
     private void Update()
     {
+        //CheckEnableInput();
+
+        if (!isEnabled) return;
+        
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (Input.GetKey(KeyCode.LeftShift))
@@ -42,7 +64,7 @@ public class PresetMenu : MonoBehaviour
             }
             else
             {
-                Selectable current = system.currentSelectedGameObject.GetComponent<Selectable>();
+                Selectable current = system.currentSelectedGameObject?.GetComponent<Selectable>();
                 Selectable nextSelectable = current?.FindSelectableOnDown();
                 if (nextSelectable != null)
                 {
@@ -50,12 +72,34 @@ public class PresetMenu : MonoBehaviour
                 }
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CloseMenu();
+        }
     }
+
+/*    private void CheckEnableInput()
+    {
+        if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.A))
+        {
+            OpenMenu();
+        }
+    }*/
 
     public void OpenMenu()
     {
-        FindObjectOfType<AnimatedWindow>().MoveDown();
+        isEnabled = true;
         gameObject.SetActive(true);
+        FindObjectOfType<AnimatedWindow>().MoveDown();
+    }
+
+    public void CloseMenu()
+    {
+        isEnabled = false;
+        ResetInputFields();
+        errorMenu.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     public void Submit()
@@ -64,13 +108,16 @@ public class PresetMenu : MonoBehaviour
         if (importer == null) return;
 
         string name = presetNameField.text;
-        Preset.Category category = currentCategory;
+        Preset.Category category = (Preset.Category) categoryDropdown.value + 1;
         string objPath = modelPathField.text;
         Vector2 xzScale = new Vector2(float.Parse(xSizeField.text), float.Parse(zSizeField.text));
         importer.ImportOBJModel(name, category, objPath, xzScale);
+    }
 
-        gameObject.SetActive(false);
-
+    private void ResetInputFields()
+    {
+        categoryDropdown.value = 0;
+        foreach (TMP_InputField field in inputFields) field.text = String.Empty;
     }
 
     public void OnCategoryChanged(int _index)
@@ -90,11 +137,23 @@ public class PresetMenu : MonoBehaviour
 
     private void SetupFields()
     {
+        // Input Fields
+        inputFields = new List<TMP_InputField>()
+        {
+            presetNameField,
+            modelPathField,
+            xSizeField,
+            zSizeField,
+        };
+
         // Submit Button
         submitButton.onClick.AddListener(() => Submit());
 
         // Browse Button
         browseButton.onClick.AddListener(() => Browse());
+
+        // Cancel Button
+        cancelButton.onClick.AddListener(() => CloseMenu());
 
         // Dropdown
         categoryDropdown.onValueChanged.AddListener((int i) => OnCategoryChanged(i));
@@ -122,5 +181,15 @@ public class PresetMenu : MonoBehaviour
         {
             Debug.Log("PresetMenu: First selectable or Eventsystem missing");
         }
+    }
+
+    private void ShowDuplicationError(object _value = null)
+    {
+        errorMenu.SetActive(true);
+    }
+
+    private void OnImportSucces(object _value = null)
+    {
+        Invoke(nameof(CloseMenu), 0.01f);
     }
 }
