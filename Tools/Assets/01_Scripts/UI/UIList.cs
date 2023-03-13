@@ -25,18 +25,19 @@ public class UIList
 
     public GameObject AddElement()
     {
+        Debug.Log(lastButtonPos);
         GameObject newInstance = GameObject.Instantiate(prefab, parent.transform);
         elements.Add(newInstance);
 
         // Positioning
-        if (lastButtonPos != default)
+        if (elements.Count > 1)
         {
             lastButtonPos = lastButtonPos + direction * elementOffset;
-            newInstance.transform.position = lastButtonPos;
+            newInstance.transform.localPosition = lastButtonPos;
         }
         else
         {
-            lastButtonPos = newInstance.transform.position;
+            lastButtonPos = newInstance.transform.localPosition;
         }
 
         return newInstance;

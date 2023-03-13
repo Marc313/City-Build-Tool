@@ -3,13 +3,14 @@ using UnityEngine;
 
 public static class FilepathManager
 {
-    public static string userModelPath = "User_Models";
+    public static string projectName = null;
+    private static string userModelPath = "User_Models";
 
     public static string GetApplicationDirectory()
     {
         if (Application.isEditor)
         {
-            return Application.dataPath;
+            return Path.Combine(Application.dataPath, "Runtime_Folders");
         }
         else
         {
@@ -28,7 +29,10 @@ public static class FilepathManager
 
     public static string GetUserModelDirectory()
     {
-        return Path.Combine(GetApplicationDirectory(), userModelPath);
+        string projectPath = Path.Combine(GetApplicationDirectory(), projectName);
+        projectPath = Path.Combine(projectPath, userModelPath);
+
+        return projectPath;
     }
 
     public static void ClearUserModelDirectory()

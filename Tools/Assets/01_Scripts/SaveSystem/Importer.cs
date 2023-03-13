@@ -19,7 +19,7 @@ public class Importer : MonoBehaviour
     public void ImportOBJModel(string _name, Preset.Category _category, string _filePath, Vector2 _xzSize)
     {
         Debug.Log("Importing...");
-        name = _name;
+        currentName = _name;
         category = _category;
         filePath = _filePath;
         xzSize = _xzSize;

@@ -1,3 +1,4 @@
+using MarcoHelpers;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,7 +28,10 @@ public class Builder : MonoBehaviour
     private Camera mainCam;
     private Preset currentGamePreset;
     private GameObject phantomObject;
+    private Quaternion currentObjectRotation;
     private Mode buildingMode = Mode.Building;
+    private bool isEnabled = true;
+    [HideInInspector] public Vector3 mouseHitPos;
 
 
     private void Awake()
@@ -42,6 +46,18 @@ public class Builder : MonoBehaviour
     private void Start()
     {
         OnStart();
+    }
+
+    private void OnEnable()
+    {
+        EventSystem.Subscribe(EventName.MENU_OPENED, DisableSelf);
+        EventSystem.Subscribe(EventName.MENU_CLOSED, EnableSelf);
+    }
+
+    private void OnDisable()
+    {
+        EventSystem.Unsubscribe(EventName.MENU_OPENED, DisableSelf);
+        EventSystem.Unsubscribe(EventName.MENU_CLOSED, EnableSelf);
     }
 
     private void OnStart()
@@ -63,7 +79,7 @@ public class Builder : MonoBehaviour
 
     private void Update()
     {
-        if (phantomObject == null) return;
+        if (phantomObject == null || !isEnabled) return;
 
         if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
         {
@@ -75,14 +91,14 @@ public class Builder : MonoBehaviour
             if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, buildingLayers))
             {
                 phantomObject.SetActive(true);
-                Vector3 hitPos = hit.point;
-                hitPos.y = 0;
-                if (!isGridEnabled) phantomObject.transform.position = hitPos;
-                else phantomObject.transform.position = Grid.ToGridPos(hitPos);
+                mouseHitPos = hit.point;
+                mouseHitPos.y = 0;
+                if (!isGridEnabled) phantomObject.transform.position = mouseHitPos;
+                else phantomObject.transform.position = Grid.ToGridPos(mouseHitPos);
 
                 if (Input.GetKeyDown(KeyCode.Mouse0))
                 {
-                    PlaceObject(hitPos);
+                    PlaceObject(mouseHitPos);
                 }
             }
             else
@@ -135,6 +151,16 @@ public class Builder : MonoBehaviour
         Debug.Log("Done Reconstructing");
     }
 
+    private void EnableSelf(object _value = null)
+    {
+        isEnabled = true;
+    }
+
+    private void DisableSelf(object _value = null)
+    {
+        isEnabled = false;
+    }
+
     private void HandleSwitchInput()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -157,6 +183,7 @@ public class Builder : MonoBehaviour
             phantomObject.SetActive(false);
         }
         phantomObject = currentGamePreset.LoadInstance();
+        currentObjectRotation = phantomObject.transform.rotation;
     }
 
     private void HandleRotationInput()
@@ -164,7 +191,7 @@ public class Builder : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             Debug.Log("Rotate");
-            phantomObject.RotateYToRight(90);
+            currentObjectRotation = phantomObject.RotateYToRight(90);
         }
     }
 
@@ -175,5 +202,6 @@ public class Builder : MonoBehaviour
 
         // Overwrite phantomObject so the old phantom will stay in place
         phantomObject = currentGamePreset.LoadInstance(_groundPos, transform);
+        phantomObject.transform.rotation = currentObjectRotation;
     }
 }

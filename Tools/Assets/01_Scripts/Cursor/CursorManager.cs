@@ -1,9 +1,11 @@
+using MarcoHelpers;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class CursorManager : MonoBehaviour
 {
     public Texture2D crosshair;
+    public bool isMenuOpen;
 
     private void Start()
     {
@@ -11,9 +13,21 @@ public class CursorManager : MonoBehaviour
         Cursor.SetCursor(crosshair, cursorOffset, CursorMode.Auto);
     }
 
+    private void OnEnable()
+    {
+        MarcoHelpers.EventSystem.Subscribe(EventName.MENU_OPENED, OnMenuOpen);
+        MarcoHelpers.EventSystem.Subscribe(EventName.MENU_CLOSED, OnMenuClosed);
+    }
+
+    private void OnDisable()
+    {
+        MarcoHelpers.EventSystem.Unsubscribe(EventName.MENU_OPENED, OnMenuOpen);
+        MarcoHelpers.EventSystem.Unsubscribe(EventName.MENU_CLOSED, OnMenuClosed);
+    }
+
     private void Update()
     {
-        if (IsMouseOverUI())
+        if (isMenuOpen || IsMouseOverUI())
         {
             Cursor.visible = true;
         }
@@ -25,6 +39,16 @@ public class CursorManager : MonoBehaviour
 
     public static bool IsMouseOverUI()
     {
-        return EventSystem.current.IsPointerOverGameObject();
+        return UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject();
+    }
+
+    private void OnMenuOpen(object _value = null)
+    {
+        isMenuOpen= true;
+    }
+
+    private void OnMenuClosed(object _value = null)
+    {
+        isMenuOpen= false;
     }
 }

@@ -5,15 +5,17 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    public static UIManager Instance;
-
     [Header("Preset Menu")]
-    [SerializeField] private GameObject quickUI;
+    [SerializeField] private GameObject presetMenu;
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private Transform uiListStartPos;
     [SerializeField] private int elementOffset = 200;
+
+    [Header("Builder Menus")]
+    [SerializeField] private AnimatedWindow presetWindow;
+    [SerializeField] private GameObject quickUI;
 
     private Builder builder;
     private Dictionary<Preset.Category, UIList> uiLists;
@@ -51,6 +53,22 @@ public class UIManager : MonoBehaviour
         LoadPresetCatalogue();
     }
 
+    public void AddPresetButton(Preset _preset)
+    {
+        UIList categoryList = uiLists[_preset.category];
+        Button button = categoryList.AddElement().GetComponent<Button>();
+        button.onClick.AddListener(() => builder.SetCurrentPreset(_preset));
+        TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
+        buttonText.text = _preset.presetName;
+    }
+
+    public void ShowBuilderUI()
+    {
+        presetMenu.SetActive(true);
+        presetWindow.MoveUp();
+        quickUI.SetActive(true);
+    }
+
     private void LoadPresetCatalogue(object value = null)
     {
         uiLists = new Dictionary<Preset.Category, UIList>();
@@ -73,19 +91,11 @@ public class UIManager : MonoBehaviour
     {
         GameObject buttonParent = new GameObject(buttonParentName);
         buttonParent.transform.position = uiListStartPos.position;
-        buttonParent.transform.parent = quickUI.transform;
+        buttonParent.transform.parent = presetMenu.transform;
         buttonParent.SetActive(false);
         return buttonParent;
     }
 
-    public void AddPresetButton(Preset _preset)
-    {
-        UIList categoryList = uiLists[_preset.category];
-        Button button = categoryList.AddElement().GetComponent<Button>();
-        button.onClick.AddListener(() => builder.SetCurrentPreset(_preset));
-        TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
-        buttonText.text = _preset.presetName;
-    }
 
     private void OnTabChanged(object _value = null)
     {

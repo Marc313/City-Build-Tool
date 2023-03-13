@@ -89,6 +89,7 @@ public class PresetMenu : MonoBehaviour
 
     public void OpenMenu()
     {
+        MarcoHelpers.EventSystem.RaiseEvent(EventName.MENU_OPENED);
         isEnabled = true;
         gameObject.SetActive(true);
         FindObjectOfType<AnimatedWindow>().MoveDown();
@@ -96,6 +97,7 @@ public class PresetMenu : MonoBehaviour
 
     public void CloseMenu()
     {
+        MarcoHelpers.EventSystem.RaiseEvent(EventName.MENU_CLOSED);
         isEnabled = false;
         ResetInputFields();
         errorMenu.SetActive(false);

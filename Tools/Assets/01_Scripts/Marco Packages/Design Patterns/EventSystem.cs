@@ -8,7 +8,9 @@ namespace MarcoHelpers
         PRESETS_LOADED = 0,
         TAB_CHANGED = 1,
         ON_OBJNAME_ALREADY_EXISTS = 2,
-        IMPORT_SUCCESS = 3
+        IMPORT_SUCCESS = 3,
+        MENU_OPENED = 4,
+        MENU_CLOSED = 5,
     }
 
     public delegate void EventCallback(object _value);

@@ -69,11 +69,18 @@ public static class Helpers
     #endregion
 
     #region GameObject Helpers
-    public static void RotateYToRight(this GameObject _object, float _angle)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="_object"></param>
+    /// <param name="_angle"></param>
+    /// <returns>Returns the rotation of the object</returns>
+    public static Quaternion RotateYToRight(this GameObject _object, float _angle)
     {
         Vector3 euler = _object.transform.rotation.eulerAngles;
         euler.y += _angle;
         _object.transform.rotation = Quaternion.Euler(euler);
+        return _object.transform.rotation;
     }
     #endregion
 }
