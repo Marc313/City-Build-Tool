@@ -29,9 +29,9 @@ public class SaveManager : Singleton<SaveManager>
     public bool Load()
     {
         SaveData save = SaveSystem.Load();
-        save.Debug();
         if (save != null)
         {
+            save.Debug();
             FilepathManager.projectName = save.projectName;
             PresetCatalogue.LoadList(save.presetCatalogue);
             builder.Reconstruct(save.builtObjects);

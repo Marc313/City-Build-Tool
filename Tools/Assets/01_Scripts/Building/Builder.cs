@@ -136,7 +136,8 @@ public class Builder : MonoBehaviour
             GameObject placedBuilding = null;
             if (building.preset != null)
             {
-                placedBuilding = building.preset.LoadInstance(building.buildingPos);
+                placedBuilding = building.preset.LoadInstance(building.buildingPos, transform);
+                /*if(building.rotation != default) */placedBuilding.transform.rotation = building.rotation;
             }
 
             if (placedBuilding != null)
@@ -198,7 +199,7 @@ public class Builder : MonoBehaviour
     private void PlaceObject(Vector3 _groundPos)
     {
         allObjects.Add(phantomObject);
-        buildings.Add(new PlacedObject(currentGamePreset, phantomObject.transform.position));
+        buildings.Add(new PlacedObject(currentGamePreset, phantomObject.transform.position, currentObjectRotation));
 
         // Overwrite phantomObject so the old phantom will stay in place
         phantomObject = currentGamePreset.LoadInstance(_groundPos, transform);

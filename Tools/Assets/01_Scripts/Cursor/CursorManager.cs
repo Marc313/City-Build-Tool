@@ -9,7 +9,7 @@ public class CursorManager : MonoBehaviour
 
     private void Start()
     {
-        Vector2 cursorOffset = new Vector2(crosshair.width / 2, crosshair.height / 2);
+        Vector2 cursorOffset = new Vector2(crosshair.width / 4, crosshair.height / 4);
         Cursor.SetCursor(crosshair, cursorOffset, CursorMode.Auto);
     }
 
