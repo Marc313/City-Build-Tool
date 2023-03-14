@@ -1,6 +1,4 @@
 using SFB;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -20,14 +18,37 @@ public static class SaveSystem
         formatter.Deserialize();
     }*/
 
-    public static string fileName = "/SaveData.cb";     // .cb extension for "City Builder"
+    public static string fileName = "newCity";     // .cb extension for "City Builder"
 
-    public static bool Save(SaveData _data)
+    public static bool SaveAs(SaveData _data)
     {
         BinaryFormatter formatter = GetBinaryFormatter();
 
-        string path = StandaloneFileBrowser.SaveFilePanel("Save Current City", FilepathManager.GetApplicationDirectory(), "newCity", "cb");
+        string path = StandaloneFileBrowser.SaveFilePanel("Save Current City", FilepathManager.GetApplicationDirectory(), fileName, "cb");
         if (path != null && path != string.Empty)
+        {
+            FileStream file = File.Create(path);
+            formatter.Serialize(file, _data);
+            file.Flush();
+            file.Close();
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool Save(SaveData _data)
+    {
+        // SaveAs or save as.
+        BinaryFormatter formatter = GetBinaryFormatter();
+
+        string path = FilepathManager.GetSavePath();
+
+        if (path == null )
+        {
+            Debug.Log("File not found, select other path!");
+        }
+        else if (path != null && path != string.Empty)
         {
             FileStream file = File.Create(path);
             formatter.Serialize(file, _data);
@@ -69,9 +90,10 @@ public static class SaveSystem
         return File.Exists(GetFilePath());
     }
 
+    // Integrate in FilepathManager
     public static string GetFilePath()
     {
-        return Path.Combine(FilepathManager.GetApplicationDirectory(), fileName);
+        return Path.Combine(FilepathManager.GetApplicationDirectory(), fileName + ".cb");
     }
 
     public static BinaryFormatter GetBinaryFormatter()

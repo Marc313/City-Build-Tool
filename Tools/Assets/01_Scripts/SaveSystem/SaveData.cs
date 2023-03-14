@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class SaveData
@@ -18,5 +19,10 @@ public class SaveData
         builtObjects = _placedObjects;
         presetCatalogue = _presets;
         projectName = _projectName;
+    }
+
+    public void Debug()
+    {
+        UnityEngine.Debug.Log($"projectName: {projectName}");
     }
 }

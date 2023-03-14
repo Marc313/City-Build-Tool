@@ -88,7 +88,7 @@ public abstract class Preset
 
         float smallerRatio = xRatio < zRatio ? xRatio : zRatio;
         _object.transform.localScale = _object.transform.lossyScale * smallerRatio;
-        Debug.Log(objectRenderer.bounds.size);
+        //Debug.Log(objectRenderer.bounds.size);
         return _object;
     }
 }

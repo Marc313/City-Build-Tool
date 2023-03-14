@@ -25,7 +25,6 @@ public class UIList
 
     public GameObject AddElement()
     {
-        Debug.Log(lastButtonPos);
         GameObject newInstance = GameObject.Instantiate(prefab, parent.transform);
         elements.Add(newInstance);
 

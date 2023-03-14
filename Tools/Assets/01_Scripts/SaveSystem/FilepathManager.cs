@@ -29,10 +29,10 @@ public static class FilepathManager
 
     public static string GetUserModelDirectory()
     {
-        string projectPath = Path.Combine(GetApplicationDirectory(), projectName);
-        projectPath = Path.Combine(projectPath, userModelPath);
+        string path = GetProjectDirectory();
+        path = Path.Combine(path, userModelPath);
 
-        return projectPath;
+        return path;
     }
 
     public static void ClearUserModelDirectory()
@@ -42,4 +42,14 @@ public static class FilepathManager
         Directory.CreateDirectory(path);
     }
 
+    public static string GetProjectDirectory()
+    {
+        return Path.Combine(GetApplicationDirectory(), projectName);
+    }
+
+    public static string GetSavePath()
+    {
+        string path = Path.Combine(GetApplicationDirectory(), projectName + ".cb");
+        return path;
+    }
 }

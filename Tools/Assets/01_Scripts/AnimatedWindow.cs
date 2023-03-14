@@ -11,7 +11,7 @@ public class AnimatedWindow : MovingObject
 
     private Task currentTask;
 
-    private void Start()
+    private void OnEnable()
     {
         upPos = transform.position;
         downPos = transform.position;

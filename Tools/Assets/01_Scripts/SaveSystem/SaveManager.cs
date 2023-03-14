@@ -13,39 +13,28 @@ public class SaveManager : Singleton<SaveManager>
 
     private void Start()
     {
-        FilepathManager.CreateUserModelDirectory();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Save();
-        }
-        else if (Input.GetKeyDown(KeyCode.L))
-        {
-            Load();
-        }
-    }
-
-    public void Save()
+    public void Save(bool _saveAs)
     {
         List<PlacedObject> cityData = builder.buildings;
         SaveData save = new SaveData(cityData, PresetCatalogue.userPresets, FilepathManager.projectName);
 
-        bool status = SaveSystem.Save(save);
+        bool status = _saveAs ? SaveSystem.SaveAs(save) : SaveSystem.Save(save);
 
         if (status) Debug.Log("City Saved!");
+        if (status) save.Debug();
     }
 
     public bool Load()
     {
         SaveData save = SaveSystem.Load();
+        save.Debug();
         if (save != null)
         {
+            FilepathManager.projectName = save.projectName;
             PresetCatalogue.LoadList(save.presetCatalogue);
             builder.Reconstruct(save.builtObjects);
-            FilepathManager.projectName = save.projectName;
 
             Debug.Log("City Loaded!");
             return true;
