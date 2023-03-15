@@ -1,6 +1,7 @@
 using MarcoHelpers;
 using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -31,6 +32,7 @@ public class Builder : MonoBehaviour
     private Quaternion currentObjectRotation;
     private Mode buildingMode = Mode.Building;
     private bool isEnabled = true;
+    private BuildingModeFSM fsm;
     [HideInInspector] public Vector3 mouseHitPos;
 
 
@@ -45,6 +47,7 @@ public class Builder : MonoBehaviour
 
     private void Start()
     {
+        fsm = new BuildingModeFSM();
         OnStart();
     }
 
@@ -79,12 +82,14 @@ public class Builder : MonoBehaviour
 
     private void Update()
     {
+        fsm?.OnUpdate();
+        HandleSwitchInput();
+
+
         if (phantomObject == null || !isEnabled) return;
 
         if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
         {
-            HandleSwitchInput();
-
             Vector2 mousePos = Input.mousePosition;
 
             RaycastHit hit;
@@ -121,6 +126,11 @@ public class Builder : MonoBehaviour
         if (CursorManager.IsMouseOverUI()) phantomObject.SetActive(false);
 
         HandleRotationInput();
+    }
+
+    private void FixedUpdate()
+    {
+        fsm?.OnFixedUpdate();
     }
 
     public void Reconstruct(List<PlacedObject> _gameObjects)
@@ -164,15 +174,22 @@ public class Builder : MonoBehaviour
 
     private void HandleSwitchInput()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        State currentState = fsm.GetCurrentState();
+        if (Input.GetKeyDown(KeyCode.Alpha1) 
+            && fsm != null
+            && currentState.GetType() != typeof(BuildState))
         {
-            SetCurrentPreset(PresetCatalogue.allPresets[0]);
+            fsm.SwitchState(typeof(BuildState));
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            SetCurrentPreset(PresetCatalogue.allPresets[1]);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) 
+        {
+
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            SetCurrentPreset(PresetCatalogue.allPresets[2]);
+        if (Input.GetKeyDown(KeyCode.Alpha3)
+            && fsm != null
+            && currentState.GetType() != typeof(DemolishState)) 
+        {
+            fsm.SwitchState(typeof(DemolishState));
         }
     }
 
