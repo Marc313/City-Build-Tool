@@ -17,6 +17,10 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private AnimatedWindow presetWindow;
     [SerializeField] private GameObject quickUI;
 
+    [Header("Quick Screens")]
+    [SerializeField] private GameObject loadingScreen;
+
+
     private Builder builder;
     private Dictionary<Preset.Category, UIList> uiLists;
     private UIList currentlyVisiblePresetList;
@@ -67,6 +71,11 @@ public class UIManager : Singleton<UIManager>
         presetMenu.SetActive(true);
         presetWindow.MoveUp();
         quickUI.SetActive(true);
+    }
+
+    public void EnableLoadingScreen(bool _isEnabled)
+    {
+        loadingScreen.SetActive(_isEnabled);
     }
 
     private void LoadPresetCatalogue(object value = null)

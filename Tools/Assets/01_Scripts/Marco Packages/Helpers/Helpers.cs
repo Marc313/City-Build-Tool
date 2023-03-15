@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -83,4 +82,54 @@ public static class Helpers
         return _object.transform.rotation;
     }
     #endregion
+
+    public static Mesh[] SplitSubmeshes(this Mesh _mesh, Material[] _materials, MeshRenderer _meshRenderer)
+    {
+        List<Vector3>[] submeshVertices = new List<Vector3>[_materials.Length];
+        List<int>[] submeshIndices = new List<int>[_materials.Length];
+        for (int i = 0; i < _materials.Length; i++)
+        {
+            submeshVertices[i] = new List<Vector3>();
+            submeshIndices[i] = new List<int>();
+        }
+
+        // Iterate over the _mesh triangles and assign each triangle to the correct submesh based on its material
+        int[] indices = _mesh.GetIndices(0);
+        for (int i = 0; i < indices.Length; i += 3)
+        {
+            int submeshIndex = _mesh.subMeshCount - 1;
+            for (int j = 0; j < _materials.Length; j++)
+            {
+                int materialIndex = _mesh.GetSubMesh(j).indexStart;
+                int materialIndexEnd = materialIndex + _mesh.GetSubMesh(j).indexCount;
+
+                if (i >= materialIndex && i < materialIndexEnd)
+                {
+                    submeshIndex = j;
+                    break;
+                }
+            }
+
+            submeshIndices[submeshIndex].Add(indices[i]);
+            submeshIndices[submeshIndex].Add(indices[i + 1]);
+            submeshIndices[submeshIndex].Add(indices[i + 2]);
+
+            submeshVertices[submeshIndex].Add(_mesh.vertices[indices[i]]);
+            submeshVertices[submeshIndex].Add(_mesh.vertices[indices[i + 1]]);
+            submeshVertices[submeshIndex].Add(_mesh.vertices[indices[i + 2]]);
+        }
+
+        // Create new meshes for each submesh
+        Mesh[] submeshes = new Mesh[_materials.Length];
+        for (int i = 0; i < _materials.Length; i++)
+        {
+            submeshes[i] = new Mesh();
+            submeshes[i].vertices = submeshVertices[i].ToArray();
+            submeshes[i].triangles = submeshIndices[i].ToArray();
+            submeshes[i].RecalculateNormals();
+            submeshes[i].RecalculateBounds();
+        }
+
+        return submeshes;
+    }
 }

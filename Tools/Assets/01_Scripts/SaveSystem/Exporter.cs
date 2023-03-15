@@ -2,6 +2,7 @@ using SFB;
 using UnityEngine;
 using UnityEngine.UI;
 using Autodesk.Fbx;
+using System;
 
 public class Exporter : MonoBehaviour
 {
@@ -12,11 +13,13 @@ public class Exporter : MonoBehaviour
     private void Start()
     {
         Button btn = exportButton.GetComponent<Button>();
-        btn.onClick.AddListener(ExportFBXScene);
+        btn.onClick.AddListener(() => { UIManager.Instance.EnableLoadingScreen(true); Invoke(nameof(ExportFBXScene), .3f); });
     }
 
     private void ExportFBXScene()
     {
+        //UIManager.Instance.EnableLoadingScreen(true);
+
         // Build the fbx scene file path 
         string fbxFilePath = StandaloneFileBrowser.SaveFilePanel("Export City", "", fileName, "fbx");
         Debug.Log(string.Format("The file that will be written is {0}", fbxFilePath));
@@ -38,7 +41,7 @@ public class Exporter : MonoBehaviour
             if (!status)
             {
                 Debug.LogError(string.Format("failed to initialize exporter, reason: " +
-                                               fbxExporter.GetStatus().GetErrorString()));
+                                                fbxExporter.GetStatus().GetErrorString()));
                 return;
             }
 
@@ -71,36 +74,46 @@ public class Exporter : MonoBehaviour
             fbxExporter.Destroy();
 
             Debug.Log("Export without errors");
-            //ModelExporter.ExportObjects(fbxFilePath, SceneManager.GetActiveScene().GetRootGameObjects());
+            //UIManager.Instance.EnableLoadingScreen(false);
+
         }
+
+        UIManager.Instance.EnableLoadingScreen(false);
+
+
     }
 
     private void AddToFBXSceneRecursively(FbxManager fbxManager, FbxScene fbxScene, FbxNode rootNode, GameObject obj)
     {
         MeshFilter filter = obj.GetComponent<MeshFilter>();
+        MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
         if (filter != null)
         {
-            // Create an FbxNode for the game object.
-            FbxNode objNode = FbxNode.Create(fbxScene, obj.name);
-
-            FbxMesh fbxMesh = FbxMesh.Create(fbxManager, obj.name);
-            // Create an FbxMesh object
-
-            fbxMesh = CopyMeshData(fbxMesh, filter.mesh);
-
-            if (fbxMesh != null)
+            foreach (Mesh mesh in filter.mesh.SplitSubmeshes(meshRenderer.materials, meshRenderer))
             {
-                // Set the FbxMesh as the node's geometry.
-                objNode.SetNodeAttribute(fbxMesh);
+                // Create an FbxNode for the game object.
+                FbxNode objNode = FbxNode.Create(fbxScene, obj.name);
 
-                // Apply the correct transform to _objNode.
-                ApplyTransform(obj, objNode);
+                FbxMesh fbxMesh = FbxMesh.Create(fbxManager, obj.name);
+                // Create an FbxMesh object
 
-                // Add the object node as a child of the root node.
-                rootNode.AddChild(objNode);
+                fbxMesh = CopyMeshData(fbxMesh, filter.mesh);
+
+                if (fbxMesh != null)
+                {
+                    // Set the FbxMesh as the node's geometry.
+                    objNode.SetNodeAttribute(fbxMesh);
+
+                    // Apply the correct transform to _objNode.
+                    ApplyTransform(obj, objNode);
+
+                    // Add the object node as a child of the root node.
+                    rootNode.AddChild(objNode);
+                }
+
+                ApplyMaterials(fbxManager, obj, objNode, fbxMesh);
             }
 
-            ApplyMaterials(fbxManager, obj, objNode, fbxMesh);
         }
 
         for (int i = 0; i < obj.transform.childCount; i++)
