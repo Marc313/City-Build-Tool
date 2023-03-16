@@ -55,11 +55,6 @@ public class UIManager : Singleton<UIManager>
         LoadPresetCatalogue();
     }
 
-    private void Update()
-    {
-        Debug.Log("Menu: " + isMenuOpen);
-    }
-
     public void AddPresetButton(Preset _preset)
     {
         if (uiLists == null)

@@ -5,12 +5,19 @@ public abstract class FSM
 {
     protected Dictionary<Type, State> states = new Dictionary<Type, State>();
     protected State currentState;
+    protected IFSMOwner owner;
 
     // FSM inject zichzelf in States, nu laten we 
-    public FSM ()
+    public FSM (IFSMOwner _owner)
+    {
+        owner = _owner;
+    }
+
+    public void Start()
     {
         states = CreateStatesDic();
         currentState = GetDefaultState();
+        currentState.OnEnter();
     }
 
     protected abstract Dictionary<Type, State> CreateStatesDic();
@@ -18,17 +25,17 @@ public abstract class FSM
 
     public void OnUpdate()
     {
-        currentState?.onUpdate();
+        currentState?.OnUpdate();
     }
 
     public void OnFixedUpdate()
     {
-        currentState?.onFixedUpdate();
+        currentState?.OnFixedUpdate();
     }
 
     public void ExitCurrentState()
     {
-        currentState?.onExit();
+        currentState?.OnExit();
         currentState = null;
     }
 
@@ -36,10 +43,10 @@ public abstract class FSM
     {
         if (states.ContainsKey(stateType))
         {
-            currentState?.onExit();
+            currentState?.OnExit();
             State newState = states[stateType];
             currentState = newState;
-            currentState?.onEnter();
+            currentState?.OnEnter();
         }
     }
 

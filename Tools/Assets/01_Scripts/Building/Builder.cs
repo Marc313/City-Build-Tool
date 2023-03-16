@@ -1,8 +1,9 @@
 using MarcoHelpers;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Builder : MonoBehaviour
+public class Builder : MonoBehaviour, IFSMOwner
 {
     // Switch to FSM
     public enum Mode
@@ -17,11 +18,12 @@ public class Builder : MonoBehaviour
 
     public List<GameObject> allObjects { get; private set; }    // Obsolete?
     public List<PlacedObject> buildings { get; private set; }
+    public ScratchPad sharedData { get; private set; } = new ScratchPad();
 
     public bool isGridEnabled;
 
+    [SerializeField] private LayerMask groundLayers;
     [SerializeField] private LayerMask buildingLayers;
-    [SerializeField] private LayerMask objectLayers;
 
     private Camera mainCam;
     private Preset currentGamePreset;
@@ -35,7 +37,7 @@ public class Builder : MonoBehaviour
 
     private void Awake()
     {
-        fsm = new BuildingModeFSM();
+        fsm = new BuildingModeFSM(this, groundLayers, buildingLayers);
         allObjects = new List<GameObject>();
         buildings = new List<PlacedObject>();
         mainCam = FindObjectOfType<Camera>();
@@ -65,11 +67,10 @@ public class Builder : MonoBehaviour
         if (PresetCatalogue.allPresets.Count > 0)
         {
             currentGamePreset = PresetCatalogue.allPresets[0];
-            //currentPrefabID = 1;
-
             phantomObject = currentGamePreset.LoadInstance();
         }
-
+        WriteScratchPadStartValues();
+        fsm?.Start();
     }
 
     private void Update()
@@ -79,13 +80,13 @@ public class Builder : MonoBehaviour
         fsm?.OnUpdate();
         HandleSwitchInput();
 
-        if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
+/*        if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
         {
             if (phantomObject == null) return;
             Vector2 mousePos = Input.mousePosition;
 
             RaycastHit hit;
-            if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, buildingLayers))
+            if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, groundLayers))
             {
                 phantomObject.SetActive(true);
                 mouseHitPos = hit.point;
@@ -109,11 +110,11 @@ public class Builder : MonoBehaviour
             Vector2 mousePos = Input.mousePosition;
             RaycastHit hit;
 
-            if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, objectLayers))
+            if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, buildingLayers))
             {
 
             }
-        }
+        }*/
 
         if (CursorManager.IsMouseOverUI()) phantomObject.SetActive(false);
 
@@ -152,6 +153,13 @@ public class Builder : MonoBehaviour
 
         buildings = _gameObjects;
         Debug.Log("Done Reconstructing");
+    }
+
+    private void WriteScratchPadStartValues()
+    {
+        sharedData.RegisterOrUpdate("gridEnabled", isGridEnabled);
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        sharedData.RegisterOrUpdate("PlaceObjectFunc", (Action<Vector3>)((Vector3 v) => PlaceObject(v)));
     }
 
     private void EnableSelf(object _value = null)
@@ -200,6 +208,8 @@ public class Builder : MonoBehaviour
         }
         phantomObject = currentGamePreset.LoadInstance();
         currentObjectRotation = phantomObject.transform.rotation;
+
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
     }
 
     private void HandleRotationInput()

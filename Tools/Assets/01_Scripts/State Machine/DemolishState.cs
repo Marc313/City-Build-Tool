@@ -2,20 +2,28 @@ using UnityEngine;
 
 public class DemolishState : State
 {
-    public override void onEnter()
+    private LayerMask buildingLayer;
+
+    public DemolishState(LayerMask _buildingLayer) 
+    { 
+        buildingLayer = _buildingLayer;
+    }
+
+
+    public override void OnEnter()
     {
         Debug.Log("Demolish");
     }
 
-    public override void onExit()
+    public override void OnExit()
     {
     }
 
-    public override void onFixedUpdate()
+    public override void OnFixedUpdate()
     {
     }
 
-    public override void onUpdate()
+    public override void OnUpdate()
     {
     }
 }

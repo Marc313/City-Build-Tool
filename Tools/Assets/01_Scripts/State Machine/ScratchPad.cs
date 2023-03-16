@@ -4,7 +4,7 @@ public class ScratchPad
 {
     private Dictionary<string, object> storedData = new Dictionary<string, object>();
 
-    public void Register(string _id, object _data)
+    public void RegisterOrUpdate(string _id, object _data)
     {
         if (storedData.ContainsKey(_id))
         {
@@ -16,10 +16,10 @@ public class ScratchPad
         }
     }
 
-    public object Get(string _id)
+    public T Get<T>(string _id)
     {
         object data;
         storedData.TryGetValue(_id, out data);
-        return data;
+        return (T) data;
     }
 }

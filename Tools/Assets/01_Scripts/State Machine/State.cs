@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public abstract class State
 {
     protected FSM fsm;
+    protected ScratchPad scratchPad;
 
-    public void InjectFSM(FSM fsm)
+    public void InjectFSM(FSM _fsm, ScratchPad _scratchPad)
     {
-        this.fsm = fsm;
+        fsm = _fsm;
+        scratchPad = _scratchPad;
     }
 
-    public abstract void onUpdate();
-    public abstract void onFixedUpdate();
-    public abstract void onEnter();
-    public abstract void onExit();
+    public abstract void OnUpdate();
+    public abstract void OnFixedUpdate();
+    public abstract void OnEnter();
+    public abstract void OnExit();
 }

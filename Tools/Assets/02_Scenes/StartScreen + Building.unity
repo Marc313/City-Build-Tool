@@ -582,10 +582,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   library: {fileID: 11400000, guid: c2b250252f181654ebbed649882be4f1, type: 2}
   isGridEnabled: 1
-  buildingLayers:
+  groundLayers:
     serializedVersion: 2
     m_Bits: 64
-  objectLayers:
+  buildingLayers:
     serializedVersion: 2
     m_Bits: 0
   mouseHitPos: {x: 0, y: 0, z: 0}
@@ -616,6 +616,7 @@ GameObject:
   - component: {fileID: 1572765297}
   - component: {fileID: 1572765296}
   - component: {fileID: 1572765299}
+  - component: {fileID: 1572765300}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -705,6 +706,19 @@ MonoBehaviour:
   zoomSpeed: 400
   minDistanceToGround: 4
   maxDistanceToGround: 22
+--- !u!114 &1572765300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1572765295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ffaded34c283964c911fa20d708b4f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  raycastRange: 50
 --- !u!1 &1630459580
 GameObject:
   m_ObjectHideFlags: 0
