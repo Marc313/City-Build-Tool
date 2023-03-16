@@ -1,11 +1,16 @@
 using MarcoHelpers;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class CursorManager : MonoBehaviour
+public class CursorManager : Singleton<CursorManager>
 {
     public Texture2D crosshair;
     public bool isMenuOpen;
+    public bool isAllowedOnScreen;
+
+    private void Awake()
+    {
+        Instance= this;
+    }
 
     private void Start()
     {
@@ -27,7 +32,7 @@ public class CursorManager : MonoBehaviour
 
     private void Update()
     {
-        if (isMenuOpen || IsMouseOverUI())
+        if (isMenuOpen || IsMouseOverUI() || true)
         {
             Cursor.visible = true;
         }

@@ -88,7 +88,13 @@ public abstract class Preset
 
         float smallerRatio = xRatio < zRatio ? xRatio : zRatio;
         _object.transform.localScale = _object.transform.lossyScale * smallerRatio;
-        //Debug.Log(objectRenderer.bounds.size);
+
+        MeshCollider collider = objectRenderer.gameObject.AddComponent<MeshCollider>();
+        collider.convex = true;
+
+        objectRenderer.gameObject.layer = LayerMask.NameToLayer("Building");
+
+
         return _object;
     }
 }

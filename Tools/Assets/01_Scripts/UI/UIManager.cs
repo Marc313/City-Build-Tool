@@ -18,6 +18,7 @@ public class UIManager : Singleton<UIManager>
     [Header("Builder Menus")]
     [SerializeField] private AnimatedWindow presetWindow;
     [SerializeField] private GameObject quickUI;
+    [SerializeField] private GameObject buildModeTab;
 
     [Header("Quick Screens")]
     [SerializeField] private GameObject loadingScreen;
@@ -75,6 +76,7 @@ public class UIManager : Singleton<UIManager>
         presetMenu.SetActive(true);
         presetWindow.MoveUp();
         quickUI.SetActive(true);
+        buildModeTab.SetActive(true);
     }
 
     public void EnableLoadingScreen(bool _isEnabled)

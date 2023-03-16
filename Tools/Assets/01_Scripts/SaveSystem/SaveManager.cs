@@ -17,12 +17,12 @@ public class SaveManager : Singleton<SaveManager>
 
     public void Save(bool _saveAs)
     {
-        List<PlacedObject> cityData = builder.buildings;
+        List<PlacedObject> cityData = builder.GetPlacedObjectList();
         SaveData save = new SaveData(cityData, PresetCatalogue.userPresets, FilepathManager.projectName);
 
         bool status = _saveAs ? SaveSystem.SaveAs(save) : SaveSystem.Save(save);
 
-        if (status) Debug.Log("City Saved!");
+        if (status) Logger.Log("City Saved!");
         if (status) save.Debug();
     }
 

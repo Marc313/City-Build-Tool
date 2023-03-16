@@ -16,6 +16,7 @@ public class BuildingModeFSM : FSM
     protected override Dictionary<Type, State> CreateStatesDic()
     {
         states.Add(typeof(BuildState), new BuildState(groundLayers));
+        states.Add(typeof(EditState), new EditState(groundLayers, buildingLayers));
         states.Add(typeof(DemolishState), new DemolishState(buildingLayers));
 
         foreach (State state in states.Values)

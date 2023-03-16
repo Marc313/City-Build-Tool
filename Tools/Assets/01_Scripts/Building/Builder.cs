@@ -1,6 +1,7 @@
 using MarcoHelpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Builder : MonoBehaviour, IFSMOwner
@@ -14,17 +15,15 @@ public class Builder : MonoBehaviour, IFSMOwner
         Bulldozing = 3
     }
 
-    public PresetLibrary library;
-
-    public List<GameObject> allObjects { get; private set; }    // Obsolete?
-    public List<PlacedObject> buildings { get; private set; }
     public ScratchPad sharedData { get; private set; } = new ScratchPad();
 
+    public PresetLibrary library;
     public bool isGridEnabled;
 
     [SerializeField] private LayerMask groundLayers;
     [SerializeField] private LayerMask buildingLayers;
 
+    private Dictionary<GameObject, PlacedObject> allObjects;
     private Camera mainCam;
     private Preset currentGamePreset;
     private GameObject phantomObject;
@@ -38,8 +37,7 @@ public class Builder : MonoBehaviour, IFSMOwner
     private void Awake()
     {
         fsm = new BuildingModeFSM(this, groundLayers, buildingLayers);
-        allObjects = new List<GameObject>();
-        buildings = new List<PlacedObject>();
+        allObjects = new Dictionary<GameObject, PlacedObject>();
         mainCam = FindObjectOfType<Camera>();
     }
 
@@ -80,45 +78,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         fsm?.OnUpdate();
         HandleSwitchInput();
 
-/*        if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
-        {
-            if (phantomObject == null) return;
-            Vector2 mousePos = Input.mousePosition;
-
-            RaycastHit hit;
-            if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, groundLayers))
-            {
-                phantomObject.SetActive(true);
-                mouseHitPos = hit.point;
-                mouseHitPos.y = 0;
-                if (!isGridEnabled) phantomObject.transform.position = mouseHitPos;
-                else phantomObject.transform.position = Grid.ToGridPos(mouseHitPos);
-
-                if (Input.GetKeyDown(KeyCode.Mouse0))
-                {
-                    PlaceObject(mouseHitPos);
-                }
-            }
-            else
-            {
-                phantomObject.SetActive(false);
-            }
-        }
-
-        else if (buildingMode == Mode.Editing)
-        {
-            Vector2 mousePos = Input.mousePosition;
-            RaycastHit hit;
-
-            if (Physics.Raycast(mainCam.ScreenPointToRay(mousePos), out hit, 100, buildingLayers))
-            {
-
-            }
-        }*/
-
-        if (CursorManager.IsMouseOverUI()) phantomObject.SetActive(false);
-
-        HandleRotationInput();
+        if (CursorManager.IsMouseOverUI() && phantomObject != null) phantomObject.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -126,12 +86,15 @@ public class Builder : MonoBehaviour, IFSMOwner
         fsm?.OnFixedUpdate();
     }
 
+    // TODO: Beter
     public void Reconstruct(List<PlacedObject> _gameObjects)
     {
-        foreach (GameObject placedObject in allObjects)
+        foreach (GameObject placedObject in allObjects.Keys)
         {
             Destroy(placedObject);
         }
+
+        allObjects = new Dictionary<GameObject, PlacedObject>();
 
         // Build all Buildings
         foreach (PlacedObject building in _gameObjects)
@@ -140,26 +103,63 @@ public class Builder : MonoBehaviour, IFSMOwner
             if (building.preset != null)
             {
                 placedBuilding = building.preset.LoadInstance(building.buildingPos, transform);
-                /*if(building.rotation != default) */placedBuilding.transform.rotation = building.rotation;
+                placedBuilding.transform.rotation = building.rotation;
             }
 
             if (placedBuilding != null)
             {
-                allObjects.Add(placedBuilding);
+                allObjects.Add(placedBuilding, building);
             }
         }
 
-        // buildings.Intersect(_gameObjects);
-
-        buildings = _gameObjects;
         Debug.Log("Done Reconstructing");
+    }
+
+    public void SetCurrentPreset(Preset _preset)
+    {
+        currentGamePreset = _preset;
+        if (phantomObject != null)
+        {
+            phantomObject.SetActive(false);
+        }
+
+        if (fsm != null
+            && fsm.GetCurrentState().GetType() != typeof(BuildState)) {
+            fsm.SwitchState(typeof(BuildState));
+        }
+
+        phantomObject = currentGamePreset.LoadInstance();
+        phantomObject.layer = 7;
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+    }
+
+    public List<PlacedObject> GetPlacedObjectList()
+    {
+        return allObjects.Values.ToList();
+    }
+
+    public void SwitchState(Type _stateType)
+    {
+        if (fsm == null) return;
+
+        State currentState = fsm.GetCurrentState();
+        if (_stateType != currentState.GetType())
+        {
+            fsm?.SwitchState(_stateType);
+        }
     }
 
     private void WriteScratchPadStartValues()
     {
+        // Fields
         sharedData.RegisterOrUpdate("gridEnabled", isGridEnabled);
         sharedData.RegisterOrUpdate("phantomObject", phantomObject);
-        sharedData.RegisterOrUpdate("PlaceObjectFunc", (Action<Vector3>)((Vector3 v) => PlaceObject(v)));
+
+        // Actions
+        sharedData.RegisterOrUpdate("PlaceObjectFunc", (Action<Vector3, Quaternion>)((Vector3 v, Quaternion q) => PlaceObject(v, q)));
+        sharedData.RegisterOrUpdate("ReplaceFunc", (Action<Vector3, Quaternion>)((Vector3 v, Quaternion q) => ReplaceObject(v, q)));
+        sharedData.RegisterOrUpdate("EditFunc", (Func<GameObject, GameObject>)((GameObject go) => EditObject(go)));
+        sharedData.RegisterOrUpdate("DemolishFunc", (Action<GameObject>)((GameObject go) => DemolishObject(go)));
     }
 
     private void EnableSelf(object _value = null)
@@ -174,7 +174,7 @@ public class Builder : MonoBehaviour, IFSMOwner
 
     private void HandleSwitchInput()
     {
-        State currentState = fsm.GetCurrentState();
+/*        State currentState = fsm.GetCurrentState();
         if (currentState == null)
         {
             Debug.Log("CurrentState not found");
@@ -196,38 +196,44 @@ public class Builder : MonoBehaviour, IFSMOwner
             && currentState.GetType() != typeof(DemolishState)) 
         {
             fsm.SwitchState(typeof(DemolishState));
-        }
+        }*/
     }
 
-    public void SetCurrentPreset(Preset _preset)
+    private void PlaceObject(Vector3 _groundPos, Quaternion _currentRotation)
     {
-        currentGamePreset = _preset;
-        if (phantomObject != null)
-        {
-            phantomObject.SetActive(false);
-        }
-        phantomObject = currentGamePreset.LoadInstance();
-        currentObjectRotation = phantomObject.transform.rotation;
-
-        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
-    }
-
-    private void HandleRotationInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            Debug.Log("Rotate");
-            currentObjectRotation = phantomObject.RotateYToRight(90);
-        }
-    }
-
-    private void PlaceObject(Vector3 _groundPos)
-    {
-        allObjects.Add(phantomObject);
-        buildings.Add(new PlacedObject(currentGamePreset, phantomObject.transform.position, currentObjectRotation));
+        allObjects.Add(phantomObject, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));
 
         // Overwrite phantomObject so the old phantom will stay in place
         phantomObject = currentGamePreset.LoadInstance(_groundPos, transform);
-        phantomObject.transform.rotation = currentObjectRotation;
+        phantomObject.transform.rotation = _currentRotation;
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+    }
+
+    private void ReplaceObject(Vector3 _groundPos, Quaternion _currentRotation)
+    {
+        allObjects.Add(phantomObject, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));
+        phantomObject = null;
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+    }
+
+    private GameObject EditObject(GameObject _gameObject)
+    {
+        if (allObjects.ContainsKey(_gameObject))
+        {
+            currentGamePreset = allObjects[_gameObject].preset;
+            phantomObject = _gameObject;
+            allObjects.Remove(_gameObject);
+            return _gameObject;
+        }
+        return null;
+    }
+
+    private void DemolishObject(GameObject _gameObject)
+    {
+        if (allObjects.ContainsKey(_gameObject))
+        {
+            allObjects.Remove(_gameObject);
+        }
+        Destroy(_gameObject);
     }
 }
