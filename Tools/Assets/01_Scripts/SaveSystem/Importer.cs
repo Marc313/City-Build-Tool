@@ -55,10 +55,13 @@ public class Importer : MonoBehaviour
             Preset newPreset = new UserPreset(_name, _category, objFileName, _xzSize);
             PresetCatalogue.AddNewEntry(newPreset);
             EventSystem.RaiseEvent(EventName.IMPORT_SUCCESS);
+            Logger.Log($"New {_name} preset added to {_category.ToString()} category!");
         }
         else
         {
             Debug.Log("Moeilijk moeilijk");
+            Logger.Log($"Import failed");
+
         }
     }
 

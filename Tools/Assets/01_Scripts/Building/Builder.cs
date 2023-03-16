@@ -1,9 +1,6 @@
 using MarcoHelpers;
-using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Builder : MonoBehaviour
 {
@@ -38,16 +35,15 @@ public class Builder : MonoBehaviour
 
     private void Awake()
     {
+        fsm = new BuildingModeFSM();
         allObjects = new List<GameObject>();
         buildings = new List<PlacedObject>();
-
-        // Only feed default values when project is made
-        PresetCatalogue.SetDefaultPresets(library.presets, true);
+        mainCam = FindObjectOfType<Camera>();
     }
 
     private void Start()
     {
-        fsm = new BuildingModeFSM();
+        PresetCatalogue.SetDefaultPresets(library.presets, true);
         OnStart();
     }
 
@@ -69,7 +65,6 @@ public class Builder : MonoBehaviour
         /*      Cursor.lockState = CursorLockMode.Confined;
                 Cursor.visible = false;*/
 
-        mainCam = Camera.main;
         if (PresetCatalogue.allPresets.Count > 0)
         {
             currentGamePreset = PresetCatalogue.allPresets[0];
@@ -82,11 +77,10 @@ public class Builder : MonoBehaviour
 
     private void Update()
     {
+        if (phantomObject == null || !isEnabled) return;
+
         fsm?.OnUpdate();
         HandleSwitchInput();
-
-
-        if (phantomObject == null || !isEnabled) return;
 
         if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
         {
@@ -175,6 +169,12 @@ public class Builder : MonoBehaviour
     private void HandleSwitchInput()
     {
         State currentState = fsm.GetCurrentState();
+        if (currentState == null)
+        {
+            Debug.Log("CurrentState not found");
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1) 
             && fsm != null
             && currentState.GetType() != typeof(BuildState))

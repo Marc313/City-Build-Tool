@@ -11,11 +11,24 @@ public static class PresetCatalogue
 
     public static void SetDefaultPresets(List<DefaultPresetLink> _presetList, bool _addToPresets = true)
     {
-        defaultPresets = _presetList;
+        foreach (DefaultPresetLink df in _presetList)
+        {
+            defaultPresets.Add(df);
+        }
+
+        if (defaultPresets != null) Debug.Log(defaultPresets.Count);
 
         if (_addToPresets)
         {
-            foreach (Preset preset in _presetList.Select(link => link.preset))
+            foreach (DefaultPresetLink df in defaultPresets)
+            {
+                if (df == null) Debug.Log("Links are null!");
+                df.Debug();
+            }
+
+            Preset[] presets = defaultPresets.Select(link => link.preset).ToArray();
+            Debug.Log("Presets: " + presets.Length);
+            foreach (Preset preset in presets)
             {
                 preset.presetID = GetFirstAvailableID();
                 allPresets.Add(preset);

@@ -20,6 +20,10 @@ public class UIManager : Singleton<UIManager>
     [Header("Quick Screens")]
     [SerializeField] private GameObject loadingScreen;
 
+    [Header("Debug Info")]
+    [SerializeField] private TMP_Text logOutput;
+    [SerializeField] private float logDuration;
+
 
     private Builder builder;
     private Dictionary<Preset.Category, UIList> uiLists;
@@ -33,12 +37,6 @@ public class UIManager : Singleton<UIManager>
         builder = FindObjectOfType<Builder>();
     }
 
-    private void Start()
-    {
-        //OnStart();
-        //Invoke(nameof(OnStart), .1f);   
-    }
-
     private void OnEnable()
     {
         EventSystem.Subscribe(EventName.PRESETS_LOADED, LoadPresetCatalogue);
@@ -49,7 +47,6 @@ public class UIManager : Singleton<UIManager>
     {
         EventSystem.Unsubscribe(EventName.PRESETS_LOADED, LoadPresetCatalogue);
         EventSystem.Unsubscribe(EventName.TAB_CHANGED, OnTabChanged);
-
     }
 
     private void OnStart()
@@ -59,6 +56,12 @@ public class UIManager : Singleton<UIManager>
 
     public void AddPresetButton(Preset _preset)
     {
+        if (uiLists == null)
+        {
+            Logger.Log("Preset Lists could not be found!");
+            LoadPresetCatalogue();
+        }
+
         UIList categoryList = uiLists[_preset.category];
         Button button = categoryList.AddElement().GetComponent<Button>();
         button.onClick.AddListener(() => builder.SetCurrentPreset(_preset));
@@ -76,6 +79,21 @@ public class UIManager : Singleton<UIManager>
     public void EnableLoadingScreen(bool _isEnabled)
     {
         loadingScreen.SetActive(_isEnabled);
+    }
+
+    // Leave this to logger class
+    public void ShowLogText(string _text)
+    {
+        logOutput.gameObject.SetActive(true);
+        logOutput.text += _text + "\n";
+        CancelInvoke(nameof(HideLogText));
+        Invoke(nameof(HideLogText), logDuration);
+    }
+
+    private void HideLogText()
+    {
+        logOutput.gameObject.SetActive(false);
+        logOutput.text = string.Empty;
     }
 
     private void LoadPresetCatalogue(object value = null)
