@@ -6,15 +6,6 @@ using UnityEngine;
 
 public class Builder : MonoBehaviour, IFSMOwner
 {
-    // Switch to FSM
-    public enum Mode
-    {
-        None = 0,
-        Building = 1,
-        Editing = 2,
-        Bulldozing = 3
-    }
-
     public ScratchPad sharedData { get; private set; } = new ScratchPad();
 
     public PresetLibrary library;
@@ -24,12 +15,8 @@ public class Builder : MonoBehaviour, IFSMOwner
     [SerializeField] private LayerMask buildingLayers;
 
     private Dictionary<GameObject, PlacedObject> allObjects;
-    private Camera mainCam;
     private Preset currentGamePreset;
     private GameObject phantomObject;
-    private Quaternion currentObjectRotation;
-    private Mode buildingMode = Mode.Building;
-    private bool isEnabled = true;
     private BuildingModeFSM fsm;
     [HideInInspector] public Vector3 mouseHitPos;
 
@@ -38,7 +25,6 @@ public class Builder : MonoBehaviour, IFSMOwner
     {
         fsm = new BuildingModeFSM(this, groundLayers, buildingLayers);
         allObjects = new Dictionary<GameObject, PlacedObject>();
-        mainCam = FindObjectOfType<Camera>();
     }
 
     private void Start()
@@ -46,7 +32,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         OnStart();
     }
 
-    private void OnEnable()
+/*    private void OnEnable()
     {
         EventSystem.Subscribe(EventName.MENU_OPENED, DisableSelf);
         EventSystem.Subscribe(EventName.MENU_CLOSED, EnableSelf);
@@ -56,7 +42,7 @@ public class Builder : MonoBehaviour, IFSMOwner
     {
         EventSystem.Unsubscribe(EventName.MENU_OPENED, DisableSelf);
         EventSystem.Unsubscribe(EventName.MENU_CLOSED, EnableSelf);
-    }
+    }*/
 
     private void OnStart()
     {
@@ -68,6 +54,7 @@ public class Builder : MonoBehaviour, IFSMOwner
             phantomObject = currentGamePreset.LoadInstance();
         }
         WriteScratchPadStartValues();
+        phantomObject.SetActive(false);
         fsm?.Start();
     }
 
@@ -77,8 +64,6 @@ public class Builder : MonoBehaviour, IFSMOwner
 
         fsm?.OnUpdate();
         HandleSwitchInput();
-
-        if (CursorManager.IsMouseOverUI() && phantomObject != null) phantomObject.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -126,10 +111,12 @@ public class Builder : MonoBehaviour, IFSMOwner
         if (fsm != null
             && fsm.GetCurrentState().GetType() != typeof(BuildState)) {
             fsm.SwitchState(typeof(BuildState));
+            FindObjectOfType<BuildModeTab>().SetState<BuildState>();
         }
 
         phantomObject = currentGamePreset.LoadInstance();
         phantomObject.layer = 7;
+        sharedData.RegisterOrUpdate("currentGamePreset", currentGamePreset);
         sharedData.RegisterOrUpdate("phantomObject", phantomObject);
     }
 
@@ -147,6 +134,8 @@ public class Builder : MonoBehaviour, IFSMOwner
         {
             fsm?.SwitchState(_stateType);
         }
+
+        if (phantomObject != null) phantomObject.SetActive(false);
     }
 
     private void WriteScratchPadStartValues()
@@ -154,6 +143,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         // Fields
         sharedData.RegisterOrUpdate("gridEnabled", isGridEnabled);
         sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        sharedData.RegisterOrUpdate("currentGamePreset", currentGamePreset);
 
         // Actions
         sharedData.RegisterOrUpdate("PlaceObjectFunc", (Action<Vector3, Quaternion>)((Vector3 v, Quaternion q) => PlaceObject(v, q)));
@@ -162,7 +152,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         sharedData.RegisterOrUpdate("DemolishFunc", (Action<GameObject>)((GameObject go) => DemolishObject(go)));
     }
 
-    private void EnableSelf(object _value = null)
+/*    private void EnableSelf(object _value = null)
     {
         isEnabled = true;
     }
@@ -170,7 +160,7 @@ public class Builder : MonoBehaviour, IFSMOwner
     private void DisableSelf(object _value = null)
     {
         isEnabled = false;
-    }
+    }*/
 
     private void HandleSwitchInput()
     {
@@ -218,22 +208,37 @@ public class Builder : MonoBehaviour, IFSMOwner
 
     private GameObject EditObject(GameObject _gameObject)
     {
-        if (allObjects.ContainsKey(_gameObject))
+        GameObject fullObject = _gameObject;
+        if (_gameObject.transform.parent != null
+            && _gameObject.transform.parent.gameObject.layer == _gameObject.layer)
         {
-            currentGamePreset = allObjects[_gameObject].preset;
-            phantomObject = _gameObject;
-            allObjects.Remove(_gameObject);
-            return _gameObject;
+            fullObject = gameObject.transform.parent.gameObject;
+        }
+
+        if (allObjects.ContainsKey(fullObject))
+        {
+            currentGamePreset = allObjects[fullObject].preset;
+            phantomObject = fullObject;
+            sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+            allObjects.Remove(fullObject);
+            return fullObject;
         }
         return null;
     }
 
     private void DemolishObject(GameObject _gameObject)
     {
-        if (allObjects.ContainsKey(_gameObject))
+        GameObject fullObject = _gameObject;
+        if (_gameObject.transform.parent != null 
+            && _gameObject.transform.parent.gameObject.layer == _gameObject.layer)
         {
-            allObjects.Remove(_gameObject);
+            fullObject = _gameObject.transform.parent.gameObject;
         }
-        Destroy(_gameObject);
+
+        if (allObjects.ContainsKey(fullObject))
+        {
+            allObjects.Remove(fullObject);
+        }
+        Destroy(fullObject);
     }
 }

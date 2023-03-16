@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 004d3ae51a227104d9177450e37da264, type: 3}
-  m_Name: House
+  m_Name: Glass
   m_EditorClassIdentifier: 
   preset:
-    presetID: 0
-    presetName: House
+    presetID: 4
+    presetName: Glass Flat
     category: 2
     XZSizeUnits: {x: 3, y: 3}
-  prefab: {fileID: 1825706968152292, guid: 5ff647d15160e7e42917b3e338c66c66, type: 3}
+  prefab: {fileID: 1273699440398734, guid: 3959f9b79ac88ac4d8690e7e6c7e3ded, type: 3}

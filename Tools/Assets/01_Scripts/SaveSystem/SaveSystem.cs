@@ -6,17 +6,17 @@ using UnityEngine;
 
 public static class SaveSystem
 {
-/*  private static IFormatter formatter = new BinaryFormatter();
+    /*  private static IFormatter formatter = new BinaryFormatter();
 
-    public static void SaveSettings()
-    {
-        formatter.Serialize();
-    }
+        public static void SaveSettings()
+        {
+            formatter.Serialize();
+        }
 
-    public static void LoadFile()
-    {
-        formatter.Deserialize();
-    }*/
+        public static void LoadFile()
+        {
+            formatter.Deserialize();
+        }*/
 
     public static string fileName = "newCity";     // .cb extension for "City Builder"
 

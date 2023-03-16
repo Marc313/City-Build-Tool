@@ -376,7 +376,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &242867850
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1814,6 +1814,10 @@ PrefabInstance:
       propertyPath: logDuration
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 5834894028461840064, guid: fd8120dedefcff84fb4f38e100acb510, type: 3}
+      propertyPath: buildModeTab
+      value: 
+      objectReference: {fileID: 242867849}
     - target: {fileID: 5834894028461840065, guid: fd8120dedefcff84fb4f38e100acb510, type: 3}
       propertyPath: m_Name
       value: UIManager
@@ -1880,7 +1884,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5834894028722245854, guid: fd8120dedefcff84fb4f38e100acb510, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5834894028963099240, guid: fd8120dedefcff84fb4f38e100acb510, type: 3}
       propertyPath: m_IsActive

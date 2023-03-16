@@ -50,6 +50,13 @@ public class BuildModeTab : MonoBehaviour
         SelectButton(demolishButton);
     }
 
+    public void SetState<T>()
+    {
+        if (typeof(T) == typeof(BuildState)) SelectButton(buildButton);
+        if (typeof(T) == typeof(EditState)) SelectButton(editButton);
+        if (typeof(T) == typeof(DemolishState)) SelectButton(demolishButton);
+    }
+
     private void SelectButton(Button _button)
     {
         selectedButtonImage.color = normalColor;

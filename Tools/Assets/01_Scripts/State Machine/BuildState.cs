@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using UnityEngine;
 
 public class BuildState : State
@@ -23,10 +24,14 @@ public class BuildState : State
 
     public override void OnEnter()
     {
-        Debug.Log("Builder");
         gridEnabled = scratchPad.Get<bool>("gridEnabled");
         PlaceObject = scratchPad.Get<Action<Vector3, Quaternion>>("PlaceObjectFunc");
         CursorManager.Instance.isAllowedOnScreen = false;
+
+        Preset currentGamePreset = scratchPad.Get<Preset>("currentGamePreset");
+        phantomObject = currentGamePreset.LoadInstance();
+        scratchPad.RegisterOrUpdate("phantomObject", phantomObject);
+        phantomObject.SetActive(false);
     }
 
     public override void OnExit()
@@ -50,6 +55,8 @@ public class BuildState : State
             phantomObject.SetActive(true);
         }
 
+        if (phantomObject == null) return;
+
         if (raycaster.GetRaycastHit(out hit, groundLayer))
         {
             mouseHitPos = hit.point;
@@ -65,6 +72,8 @@ public class BuildState : State
         }
 
         HandleRotationInput();
+        if (CursorManager.IsMouseOverUI() && phantomObject != null) phantomObject.SetActive(false);
+        else if (phantomObject != null) phantomObject.SetActive(true);
     }
 
     private void HandleRotationInput()

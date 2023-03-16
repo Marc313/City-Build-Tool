@@ -92,8 +92,8 @@ public abstract class Preset
         MeshCollider collider = objectRenderer.gameObject.AddComponent<MeshCollider>();
         collider.convex = true;
 
+        _object.gameObject.layer = LayerMask.NameToLayer("Building");
         objectRenderer.gameObject.layer = LayerMask.NameToLayer("Building");
-
 
         return _object;
     }

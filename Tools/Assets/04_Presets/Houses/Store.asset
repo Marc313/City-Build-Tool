@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Store
   m_EditorClassIdentifier: 
   preset:
-    presetID: 0
+    presetID: 3
     presetName: Store
     category: 2
     XZSizeUnits: {x: 3, y: 3}
-  prefab: {fileID: 100000, guid: 7f28847801426794dbdb6eba4fa66cea, type: 3}
+  prefab: {fileID: 1026519327573510, guid: df93f3d6378363547a6e517b28966afd, type: 3}
