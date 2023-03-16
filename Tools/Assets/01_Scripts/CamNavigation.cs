@@ -18,6 +18,8 @@ public class CamNavigation : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (UIManager.Instance.isMenuOpen) return;
+
         /*  if (Input.GetKeyDown(KeyCode.Mouse1))
                 {
                     mouseGroundPos = builder.mouseHitPos;
@@ -34,18 +36,6 @@ public class CamNavigation : MonoBehaviour
         float vert = Input.GetAxis("Vertical");
         float hor = Input.GetAxis("Horizontal");
         float mouseScrollValue = Input.GetAxis("Mouse ScrollWheel");
-        /*
-                Vector3 xzDirection = vert * Vector3.forward + hor * Vector3.right;
-                Vector3 zoomDirection = mouseScrollValue * transform.forward;
-                Vector3 movement = (xzDirection * speed + zoomDirection * zoomSpeed) * Time.deltaTime;
-                transform.Translate(movement, Space.World);
-                transform.SetYPosition(Mathf.Clamp(transform.position.y, minDistanceToGround, maxDistanceToGround));    // TODO: convert min/max DistanceToGround to actually be the distance to the ground, not just y-pos*/
-
-        /*        Vector3 zoomDirection = mouseScrollValue * transform.forward;
-                Vector3 zoomMovement = zoomDirection * zoomSpeed * Time.deltaTime;
-                transform.Translate(zoomMovement, Space.World);
-                transform.SetYPosition(Mathf.Clamp(transform.position.y, minDistanceToGround, maxDistanceToGround));    // TODO: convert min/max DistanceToGround to actually be the distance to the ground, not just y-pos*/
-
 
         Vector3 direction = vert * Vector3.forward + hor * Vector3.right;
         Vector3 movement = direction * speed * Time.deltaTime;
@@ -60,10 +50,5 @@ public class CamNavigation : MonoBehaviour
             transform.position = newPos;
         }
             // TODO: convert min/max DistanceToGround to actually be the distance to the ground, not just y-pos
-
-        /*
-                transform.Translate(zoomMovement, Space.World);
-                transform.SetYPosition(Mathf.Clamp(transform.position.y, minDistanceToGround, maxDistanceToGround));    // TODO: convert min/max DistanceToGround to actually be the distance to the ground, not just y-pos*/
-
     }
 }

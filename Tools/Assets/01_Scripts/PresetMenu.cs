@@ -3,13 +3,11 @@ using SFB;
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using EventSystem = UnityEngine.EventSystems.EventSystem;
 
-public class PresetMenu : MonoBehaviour
+public class PresetMenu : Menu
 {
     [SerializeField] private TMP_InputField presetNameField;
     [SerializeField] private TMP_Dropdown categoryDropdown;
@@ -33,14 +31,16 @@ public class PresetMenu : MonoBehaviour
         SetupFields();
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         MarcoHelpers.EventSystem.Subscribe(EventName.ON_OBJNAME_ALREADY_EXISTS, ShowDuplicationError);
         MarcoHelpers.EventSystem.Subscribe(EventName.IMPORT_SUCCESS, OnImportSucces);
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
         MarcoHelpers.EventSystem.Unsubscribe(EventName.ON_OBJNAME_ALREADY_EXISTS, ShowDuplicationError);
         MarcoHelpers.EventSystem.Unsubscribe(EventName.IMPORT_SUCCESS, OnImportSucces);
     }

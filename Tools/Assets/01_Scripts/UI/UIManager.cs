@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class UIManager : Singleton<UIManager>
 {
+    [HideInInspector] public bool isMenuOpen;
+
     [Header("Preset Menu")]
     [SerializeField] private GameObject presetMenu;
     [SerializeField] private GameObject buttonPrefab;
@@ -23,7 +25,6 @@ public class UIManager : Singleton<UIManager>
     [Header("Debug Info")]
     [SerializeField] private TMP_Text logOutput;
     [SerializeField] private float logDuration;
-
 
     private Builder builder;
     private Dictionary<Preset.Category, UIList> uiLists;
@@ -52,6 +53,11 @@ public class UIManager : Singleton<UIManager>
     private void OnStart()
     {
         LoadPresetCatalogue();
+    }
+
+    private void Update()
+    {
+        Debug.Log("Menu: " + isMenuOpen);
     }
 
     public void AddPresetButton(Preset _preset)

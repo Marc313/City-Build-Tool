@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NewCityScreen : MonoBehaviour
+public class NewCityScreen : Menu
 {
     [SerializeField] private Button createButton;
     [SerializeField] private StartScreen startScreen;

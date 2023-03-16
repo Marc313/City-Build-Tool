@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StartScreen : MonoBehaviour
+public class StartScreen : Menu
 {
     [SerializeField] private Button newCityButton;
     [SerializeField] private Button openCityButton;
@@ -42,8 +42,8 @@ public class StartScreen : MonoBehaviour
 
     private void NewCity()
     {
-        newCityMenu.SetActive(true);
         startMenu.SetActive(false);
+        newCityMenu.SetActive(true);
     }
 
 }

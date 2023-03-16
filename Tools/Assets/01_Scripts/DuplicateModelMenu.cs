@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DuplicateModelMenu : MonoBehaviour
+public class DuplicateModelMenu : Menu
 {
     [SerializeField] private Button duplicateButton;
     [SerializeField] private Button replaceButton;

@@ -43,7 +43,6 @@ public class Builder : MonoBehaviour
 
     private void Start()
     {
-        PresetCatalogue.SetDefaultPresets(library.presets, true);
         OnStart();
     }
 
@@ -61,9 +60,7 @@ public class Builder : MonoBehaviour
 
     private void OnStart()
     {
-
-        /*      Cursor.lockState = CursorLockMode.Confined;
-                Cursor.visible = false;*/
+        PresetCatalogue.SetDefaultPresets(library.presets, true);
 
         if (PresetCatalogue.allPresets.Count > 0)
         {
@@ -77,13 +74,14 @@ public class Builder : MonoBehaviour
 
     private void Update()
     {
-        if (phantomObject == null || !isEnabled) return;
+        if (UIManager.Instance.isMenuOpen) return;
 
         fsm?.OnUpdate();
         HandleSwitchInput();
 
         if (buildingMode == Mode.Building && !CursorManager.IsMouseOverUI())
         {
+            if (phantomObject == null) return;
             Vector2 mousePos = Input.mousePosition;
 
             RaycastHit hit;
