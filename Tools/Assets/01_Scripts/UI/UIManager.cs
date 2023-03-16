@@ -12,6 +12,7 @@ public class UIManager : Singleton<UIManager>
     [Header("Preset Menu")]
     [SerializeField] private GameObject presetMenu;
     [SerializeField] private GameObject buttonPrefab;
+    [SerializeField] private GameObject scrollViewContent;
     [SerializeField] private Transform uiListStartPos;
     [SerializeField] private int elementOffset = 200;
 
@@ -135,6 +136,7 @@ public class UIManager : Singleton<UIManager>
         UIList categoryList = uiLists[category];
         currentlyVisiblePresetList?.EnableParent(false);
         categoryList?.EnableParent(true);
+        //categoryList.GetParent();
 
         currentlyVisiblePresetList = categoryList;
     }

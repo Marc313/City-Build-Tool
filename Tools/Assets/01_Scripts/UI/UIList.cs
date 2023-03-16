@@ -58,4 +58,9 @@ public class UIList
     {
         parent.SetActive(_enabled);
     }
+
+    public GameObject GetParent()
+    {
+        return parent;
+    }
 }
