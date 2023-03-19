@@ -1,4 +1,3 @@
-using Ookii.Dialogs;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -62,5 +61,14 @@ public class UIList
     public GameObject GetParent()
     {
         return parent;
+    }
+
+    public float GetTotalSize()
+    {
+        return elements.Count * elementOffset + elementOffset/2;
+
+        Renderer rend = prefab.GetComponent<Renderer>();
+        float bonusValue = rend == null ? 0.0f : rend.bounds.size.x;
+        return lastButtonPos.magnitude + bonusValue;
     }
 }

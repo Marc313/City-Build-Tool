@@ -12,7 +12,7 @@ public class UIManager : Singleton<UIManager>
     [Header("Preset Menu")]
     [SerializeField] private GameObject presetMenu;
     [SerializeField] private GameObject buttonPrefab;
-    [SerializeField] private GameObject scrollViewContent;
+    [SerializeField] private PresetScrollBar presetScrollBar;
     [SerializeField] private Transform uiListStartPos;
     [SerializeField] private int elementOffset = 200;
 
@@ -70,6 +70,7 @@ public class UIManager : Singleton<UIManager>
         button.onClick.AddListener(() => builder.SetCurrentPreset(_preset));
         TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
         buttonText.text = _preset.presetName;
+        presetScrollBar.ResizeContentFitter(categoryList.GetTotalSize());
     }
 
     public void ShowBuilderUI()
@@ -134,9 +135,15 @@ public class UIManager : Singleton<UIManager>
 
         Preset.Category category = (Preset.Category) _value;
         UIList categoryList = uiLists[category];
-        currentlyVisiblePresetList?.EnableParent(false);
+        presetScrollBar.ResetScrollValue();
+        if (currentlyVisiblePresetList!= null)
+        {
+            currentlyVisiblePresetList.GetParent().transform.parent = presetMenu.transform;
+            currentlyVisiblePresetList?.EnableParent(false);
+        }
         categoryList?.EnableParent(true);
-        //categoryList.GetParent();
+        categoryList.GetParent().transform.parent = presetScrollBar.contentFitter.transform;
+        presetScrollBar.ResizeContentFitter(categoryList.GetTotalSize());
 
         currentlyVisiblePresetList = categoryList;
     }

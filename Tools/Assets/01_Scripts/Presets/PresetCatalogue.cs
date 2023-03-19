@@ -55,7 +55,7 @@ public static class PresetCatalogue
     {
         if (defaultPresets.Count <= 0) return null;
         var list = defaultPresets.Where(link => link.preset.presetID == _preset.presetID);
-        if (list == null) return null;
+        if (list == null || list.Count() <= 0) return null;
         var prefab = list.FirstOrDefault().prefab;
         return prefab;
     }
