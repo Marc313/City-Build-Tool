@@ -23,7 +23,8 @@ public static class PresetCatalogue
         {
             foreach (Preset preset in defaultPresets.Select(link => link.preset))
             {
-                preset.presetID = GetFirstAvailableID();
+                if (preset.presetID != default)
+                    preset.presetID = GetFirstAvailableID();
                 allPresets.Add(preset);
             }
         }
@@ -54,7 +55,7 @@ public static class PresetCatalogue
     public static GameObject GetPrefabByPreset(Preset _preset)
     {
         if (defaultPresets.Count <= 0) return null;
-        var list = defaultPresets.Where(link => link.preset.presetID == _preset.presetID);
+        var list = defaultPresets.Where(link => link.preset.presetName == _preset.presetName);
         if (list == null || list.Count() <= 0) return null;
         var prefab = list.FirstOrDefault().prefab;
         return prefab;

@@ -32,8 +32,6 @@ public class UIManager : Singleton<UIManager>
     private Dictionary<Preset.Category, UIList> uiLists;
     private UIList currentlyVisiblePresetList;
 
-    //private UIList list;
-
     private void Awake()
     {
         Instance = this;

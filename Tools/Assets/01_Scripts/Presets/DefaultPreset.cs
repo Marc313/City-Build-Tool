@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.WindowsRuntime;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public class DefaultPreset : Preset
@@ -11,7 +10,12 @@ public class DefaultPreset : Preset
     public override GameObject LoadInstance()
     {
         GameObject prefab = PresetCatalogue.GetPrefabByPreset(this);
-        GameObject result = Instantiator.Instantiate(prefab);
-        return ApplyScaling(result);
+        if (prefab != null)
+        {
+            GameObject result = Instantiator.Instantiate(prefab);
+            return ApplyScaling(result);
+        }
+        Debug.Log($"Prefab for Preset {this} could not be found!");
+        return null;
     }
 }

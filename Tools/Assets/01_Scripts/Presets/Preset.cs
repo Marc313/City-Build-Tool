@@ -22,7 +22,7 @@ public abstract class Preset
 
         UIManager.Instance.AddPresetButton(this);
     }
-
+/*
     public override bool Equals(object obj)
     {
         Preset other = obj as Preset;
@@ -32,7 +32,7 @@ public abstract class Preset
         }
 
         return false;
-    }
+    }*/
 
     public enum Category
     {
