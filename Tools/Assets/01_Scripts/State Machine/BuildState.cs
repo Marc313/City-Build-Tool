@@ -64,7 +64,7 @@ public class BuildState : State
             if (!gridEnabled) phantomObject.transform.position = mouseHitPos;
             else phantomObject.transform.position = Grid.ToGridPos(mouseHitPos);
 
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (!CursorManager.IsMouseOverUI() && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 PlaceObject?.Invoke(Grid.ToGridPos(mouseHitPos), currentObjectRotation);
                 if (PlaceObject == null) Debug.Log("Method not Found");

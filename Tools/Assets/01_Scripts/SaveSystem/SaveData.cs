@@ -7,6 +7,7 @@ public class SaveData
     public List<PlacedObject> builtObjects;
     public List<Preset> presetCatalogue;
     public string projectName;
+    public Vector3 cameraPosition;
 
     public SaveData(List<PlacedObject> _placedObjects, List<Preset> _presets) 
     { 
@@ -21,8 +22,11 @@ public class SaveData
         projectName = _projectName;
     }
 
-    public void Debug()
+    public SaveData(List<PlacedObject> _placedObjects, List<Preset> _presets, string _projectName, Vector3 _camPos)
     {
-        UnityEngine.Debug.Log($"projectName: {projectName}");
+        builtObjects = _placedObjects;
+        presetCatalogue = _presets;
+        projectName = _projectName;
+        cameraPosition = _camPos;
     }
 }

@@ -18,12 +18,20 @@ public class SaveManager : Singleton<SaveManager>
     public void Save(bool _saveAs)
     {
         List<PlacedObject> cityData = builder.GetPlacedObjectList();
-        SaveData save = new SaveData(cityData, PresetCatalogue.userPresets, FilepathManager.projectName);
+        CamNavigation camera = FindObjectOfType<CamNavigation>();
+        SaveData save = null;
+        if (camera == null)
+        {
+            save = new SaveData(cityData, PresetCatalogue.userPresets, FilepathManager.projectName);
+        }
+        else 
+        {
+            save = new SaveData(cityData, PresetCatalogue.userPresets, FilepathManager.projectName, camera.transform.position);
+        }
 
         bool status = _saveAs ? SaveSystem.SaveAs(save) : SaveSystem.Save(save);
 
         if (status) Logger.Log("City Saved!");
-        if (status) save.Debug();
     }
 
     public bool Load()
@@ -31,10 +39,10 @@ public class SaveManager : Singleton<SaveManager>
         SaveData save = SaveSystem.Load();
         if (save != null)
         {
-            save.Debug();
             FilepathManager.projectName = save.projectName;
             PresetCatalogue.LoadList(save.presetCatalogue);
             builder.Reconstruct(save.builtObjects);
+            FindObjectOfType<CamNavigation>()?.LoadPosition(save.cameraPosition);
 
             Debug.Log("City Loaded!");
             return true;

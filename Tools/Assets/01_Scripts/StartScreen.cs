@@ -1,3 +1,4 @@
+using MarcoHelpers;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,7 @@ public class StartScreen : Menu
     public void CloseMenu()
     {
         UIManager.Instance.ShowBuilderUI();     // Set other menu's active.
+        FindObjectOfType<Builder>().OnStart();
         newCityMenu.SetActive(false);
         startMenu.SetActive(false);
         gameObject.SetActive(false);

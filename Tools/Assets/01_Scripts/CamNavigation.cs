@@ -8,12 +8,14 @@ public class CamNavigation : MonoBehaviour
     [SerializeField] private float minDistanceToGround;
     [SerializeField] private float maxDistanceToGround;
 
-    private Vector3 mouseGroundPos;
-    private Builder builder;
-
     private void Start()
     {
-        builder = FindObjectOfType<Builder>();
+    }
+
+    public void LoadPosition(Vector3 _position)
+    {
+        if (_position != default)
+        transform.position = _position;
     }
 
     private void LateUpdate()
@@ -40,6 +42,9 @@ public class CamNavigation : MonoBehaviour
         Vector3 direction = vert * Vector3.forward + hor * Vector3.right;
         Vector3 movement = direction * speed * Time.deltaTime;
         transform.Translate(movement, Space.World);
+
+        // Mouse Zooming
+        if (CursorManager.IsMouseOverUI()) return;
 
         Vector3 zoomDirection = mouseScrollValue * transform.forward;
         Vector3 zoomMovement = zoomDirection * zoomSpeed * Time.deltaTime;

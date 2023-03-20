@@ -1,4 +1,3 @@
-using MarcoHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +19,8 @@ public class Builder : MonoBehaviour, IFSMOwner
     private BuildingModeFSM fsm;
     [HideInInspector] public Vector3 mouseHitPos;
 
+    private bool hasStarted;
+
 
     private void Awake()
     {
@@ -27,34 +28,35 @@ public class Builder : MonoBehaviour, IFSMOwner
         allObjects = new Dictionary<GameObject, PlacedObject>();
     }
 
+    /*    private void OnEnable()
+        {
+            EventSystem.Subscribe(EventName.MENU_OPENED, DisableSelf);
+            EventSystem.Subscribe(EventName.MENU_CLOSED, EnableSelf);
+        }
+
+        private void OnDisable()
+        {
+            EventSystem.Unsubscribe(EventName.MENU_OPENED, DisableSelf);
+            EventSystem.Unsubscribe(EventName.MENU_CLOSED, EnableSelf);
+        }*/
+
     private void Start()
     {
         OnStart();
     }
 
-/*    private void OnEnable()
+    public void OnStart()
     {
-        EventSystem.Subscribe(EventName.MENU_OPENED, DisableSelf);
-        EventSystem.Subscribe(EventName.MENU_CLOSED, EnableSelf);
-    }
+        if (hasStarted) return;
 
-    private void OnDisable()
-    {
-        EventSystem.Unsubscribe(EventName.MENU_OPENED, DisableSelf);
-        EventSystem.Unsubscribe(EventName.MENU_CLOSED, EnableSelf);
-    }*/
-
-    private void OnStart()
-    {
+        hasStarted= true;
         PresetCatalogue.SetDefaultPresets(library.presets, true);
 
         if (PresetCatalogue.allPresets.Count > 0)
         {
             currentGamePreset = PresetCatalogue.allPresets[0];
-            phantomObject = currentGamePreset.LoadInstance();
         }
         WriteScratchPadStartValues();
-        phantomObject.SetActive(false);
         fsm?.Start();
     }
 
@@ -212,7 +214,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         if (_gameObject.transform.parent != null
             && _gameObject.transform.parent.gameObject.layer == _gameObject.layer)
         {
-            fullObject = gameObject.transform.parent.gameObject;
+            fullObject = _gameObject.transform.parent.gameObject;
         }
 
         if (allObjects.ContainsKey(fullObject))
@@ -221,6 +223,7 @@ public class Builder : MonoBehaviour, IFSMOwner
             phantomObject = fullObject;
             sharedData.RegisterOrUpdate("phantomObject", phantomObject);
             allObjects.Remove(fullObject);
+            fullObject.transform.parent = null;
             return fullObject;
         }
         return null;

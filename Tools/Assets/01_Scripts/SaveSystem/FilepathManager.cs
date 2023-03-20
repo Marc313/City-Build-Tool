@@ -1,9 +1,11 @@
+using Ookii.Dialogs;
 using System.IO;
 using UnityEngine;
 
 public static class FilepathManager
 {
     public static string projectName = null;
+    private static string screenshotPath = "Screenshots";
     private static string userModelPath = "User_Models";
 
     public static string GetApplicationDirectory()
@@ -16,6 +18,25 @@ public static class FilepathManager
         {
             return Application.persistentDataPath;
         }
+    }
+
+    private static string GetScreenshotFolder()
+    {
+        return Path.Combine(GetApplicationDirectory(), screenshotPath);
+    }
+
+    public static bool ScreenshotExists(string _presetName)
+    {
+        if (File.Exists(GetScreenshotPath(_presetName)))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static string GetScreenshotPath(string _presetName)
+    {
+        return Path.Combine(GetScreenshotFolder(), _presetName + ".png");
     }
 
     public static void CreateUserModelDirectory()

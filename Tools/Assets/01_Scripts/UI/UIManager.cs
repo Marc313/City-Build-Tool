@@ -31,11 +31,14 @@ public class UIManager : Singleton<UIManager>
     private Builder builder;
     private Dictionary<Preset.Category, UIList> uiLists;
     private UIList currentlyVisiblePresetList;
+    private ScreenshotManager screenshotManager;
+    private Dictionary<Preset, Button> presetButtons = new Dictionary<Preset, Button>();
 
     private void Awake()
     {
         Instance = this;
         builder = FindObjectOfType<Builder>();
+        screenshotManager = FindObjectOfType<ScreenshotManager>();
     }
 
     private void OnEnable()
@@ -65,9 +68,28 @@ public class UIManager : Singleton<UIManager>
 
         UIList categoryList = uiLists[_preset.category];
         Button button = categoryList.AddElement().GetComponent<Button>();
+        if (!presetButtons.ContainsKey(_preset)) presetButtons.Add(_preset, button);
+
+        // Modify button values
         button.onClick.AddListener(() => builder.SetCurrentPreset(_preset));
         TMP_Text buttonText = button.GetComponentInChildren<TMP_Text>();
-        buttonText.text = _preset.presetName;
+        if (buttonText != null) buttonText.text = _preset.presetName;
+
+        /*
+                if (screenshotManager.presetSpriteDict.ContainsKey(_preset))
+                {
+                    button.image.sprite = screenshotManager.presetSpriteDict[_preset];
+                    if (buttonText != null) buttonText.gameObject.SetActive(false);
+                }
+                else 
+                {
+                    if (buttonText != null)
+                    {
+                        buttonText.gameObject.SetActive(true);
+                        buttonText.text = _preset.presetName;
+                    }
+                }*/
+
         presetScrollBar.ResizeContentFitter(categoryList.GetTotalSize());
     }
 
@@ -93,6 +115,22 @@ public class UIManager : Singleton<UIManager>
         Invoke(nameof(HideLogText), logDuration);
     }
 
+    public void AssignSpriteToButton(Preset _preset, Sprite _sprite)
+    {
+        Debug.Log($"Assigning");
+
+        if (presetButtons.ContainsKey(_preset))
+        {
+            Button button = presetButtons[_preset];
+            button.image.sprite = _sprite;
+            button.GetComponentInChildren<TMP_Text>()?.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log($"Could not assign sprite to {_preset.presetName}");
+        }
+    }
+
     private void HideLogText()
     {
         logOutput.gameObject.SetActive(false);
@@ -101,20 +139,33 @@ public class UIManager : Singleton<UIManager>
 
     private void LoadPresetCatalogue(object value = null)
     {
-        uiLists = new Dictionary<Preset.Category, UIList>();
-
-        for (int i = 1; i < Enum.GetValues(typeof(Preset.Category)).Length; i++)
+        presetButtons = new Dictionary<Preset, Button>();
+        if (uiLists != null && uiLists.Count > 0)
         {
-            Preset.Category category = (Preset.Category)i;
-            string buttonParentName = $"{category.ToString().ToLower()}Buttons";
-            GameObject buttonParent = CreateButtonParent(buttonParentName);
-            uiLists[category] = new UIList(buttonPrefab, buttonParent, elementOffset, Vector3.right);
+            foreach (UIList list in uiLists.Values)
+            {
+                list.Reset();
+            }
+        }
+        else
+        {
+            uiLists = new Dictionary<Preset.Category, UIList>();
+
+            for (int i = 1; i < Enum.GetValues(typeof(Preset.Category)).Length; i++)
+            {
+                Preset.Category category = (Preset.Category)i;
+                string buttonParentName = $"{category.ToString().ToLower()}Buttons";
+                GameObject buttonParent = CreateButtonParent(buttonParentName);
+                uiLists[category] = new UIList(buttonPrefab, buttonParent, elementOffset, Vector3.right);
+            }
         }
 
         foreach (Preset preset in PresetCatalogue.allPresets)
         {
             AddPresetButton(preset);
         }
+
+        screenshotManager.ScreenshotAllPresets(PresetCatalogue.allPresets);
     }
 
     private GameObject CreateButtonParent(string buttonParentName)
