@@ -1,0 +1,6 @@
+@startuml
+class ServiceLocator <<static>> {
+    + {static} RegisterService(t:T) : void
+    + {static} GetService() : T
+}
+@enduml

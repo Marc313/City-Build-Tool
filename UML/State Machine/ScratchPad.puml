@@ -1,0 +1,6 @@
+@startuml
+class ScratchPad {
+    + RegisterOrUpdate(_id:string, _data:object) : void
+    + Get(_id:string) : T
+}
+@enduml

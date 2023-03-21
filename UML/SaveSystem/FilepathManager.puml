@@ -1,0 +1,14 @@
+@startuml
+class FilepathManager <<static>> {
+    + {static} projectName : string = null
+    + {static} GetApplicationDirectory() : string
+    + {static} ScreenshotExists(_presetName:string) : bool
+    + {static} GetScreenshotPath(_presetName:string) : string
+    + {static} CreateUserModelDirectory() : void
+    + {static} GetUserModelDirectory() : string
+    + {static} ClearUserModelDirectory() : void
+    + {static} GetProjectDirectory() : string
+    + {static} GetSavePath() : string
+    + {static} CheckProjectPath() : bool
+}
+@enduml

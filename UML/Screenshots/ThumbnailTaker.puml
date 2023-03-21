@@ -1,0 +1,8 @@
+@startuml
+class ThumbnailTaker {
+    + screenshotWidth : int = 512
+    + screenshotHeight : int = 512
+    + TakeScreenshot(_targetObject:GameObject, _presetName:string, _onDone:Action) : void
+}
+MonoBehaviour <|-- ThumbnailTaker
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class AgentParameters {
+    + currentRoadLength : float
+}
+AgentParameters --> "position" Vector3
+AgentParameters --> "direction" Vector3
+@enduml

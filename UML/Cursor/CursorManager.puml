@@ -1,0 +1,11 @@
+@startuml
+class CursorManager {
+    + isMenuOpen : bool
+    + isAllowedOnScreen : bool
+    + {static} IsMouseOverUI() : bool
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<CursorManager>" <|-- CursorManager
+CursorManager --> "crosshair" Texture2D
+@enduml

@@ -1,0 +1,10 @@
+@startuml
+class DemolishState {
+    + DemolishState(_buildingLayer:LayerMask)
+    + <<override>> OnEnter() : void
+    + <<override>> OnExit() : void
+    + <<override>> OnFixedUpdate() : void
+    + <<override>> OnUpdate() : void
+}
+State <|-- DemolishState
+@enduml

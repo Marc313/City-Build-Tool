@@ -1,0 +1,15 @@
+@startuml
+class Builder {
+    + isGridEnabled : bool
+    + OnStart() : void
+    + Reconstruct(_gameObjects:List<PlacedObject>) : void
+    + SetCurrentPreset(_preset:Preset) : void
+    + GetPlacedObjectList() : List<PlacedObject>
+    + SwitchState(_stateType:Type) : void
+}
+MonoBehaviour <|-- Builder
+IFSMOwner <|-- Builder
+Builder o-> "sharedData" ScratchPad
+Builder --> "library" PresetLibrary
+Builder --> "mouseHitPos" Vector3
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+class UIManager {
+    + isMenuOpen : bool
+    + AddPresetButton(_preset:Preset) : void
+    + ShowBuilderUI() : void
+    + EnableLoadingScreen(_isEnabled:bool) : void
+    + ShowLogText(_text:string) : void
+    + AssignSpriteToButton(_preset:Preset, _sprite:Sprite) : void
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<UIManager>" <|-- UIManager
+@enduml

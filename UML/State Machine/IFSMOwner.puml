@@ -1,0 +1,5 @@
+@startuml
+interface IFSMOwner {
+}
+IFSMOwner --> "sharedData" ScratchPad
+@enduml

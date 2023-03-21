@@ -1,0 +1,6 @@
+@startuml
+interface IFormatter {
+    + Serialize() : void
+    + Deserialize() : void
+}
+@enduml

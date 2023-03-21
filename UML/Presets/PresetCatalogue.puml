@@ -1,0 +1,16 @@
+@startuml
+class PresetCatalogue <<static>> {
+    + {static} SetDefaultPresets(_presetList:List<DefaultPresetLink>, _addToPresets:bool) : void
+    + {static} LoadList(_presetList:List<Preset>) : void
+    + {static} GetPresetByID(_presetID:int) : Preset
+    + {static} GetPrefabByPreset(_preset:Preset) : GameObject
+    + {static} PresetWithOBJNameExits(_objName:string) : bool
+    + {static} AddNewEntry(_preset:Preset) : void
+    + {static} GetFirstAvailableID() : int
+}
+class "List`1"<T> {
+}
+PresetCatalogue o-> "allPresets<Preset>" "List`1"
+PresetCatalogue o-> "userPresets<Preset>" "List`1"
+PresetCatalogue o-> "defaultPresets<DefaultPresetLink>" "List`1"
+@enduml

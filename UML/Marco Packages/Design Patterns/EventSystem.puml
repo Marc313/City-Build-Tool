@@ -1,0 +1,15 @@
+@startuml
+enum EventName {
+    PRESETS_LOADED= 0,
+    TAB_CHANGED= 1,
+    ON_OBJNAME_ALREADY_EXISTS= 2,
+    IMPORT_SUCCESS= 3,
+    MENU_OPENED= 4,
+    MENU_CLOSED= 5,
+}
+class EventSystem <<static>> {
+    + {static} Subscribe(_evt:EventName, _func:EventCallback) : void
+    + {static} Unsubscribe(_evt:EventName, _func:EventCallback) : void
+    + {static} RaiseEvent(_evt:EventName, _value:object) : void
+}
+@enduml

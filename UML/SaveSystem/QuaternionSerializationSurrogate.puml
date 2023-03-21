@@ -1,0 +1,7 @@
+@startuml
+class QuaternionSerializationSurrogate {
+    + GetObjectData(obj:object, info:SerializationInfo, context:StreamingContext) : void
+    + SetObjectData(obj:object, info:SerializationInfo, context:StreamingContext, selector:ISurrogateSelector) : object
+}
+ISerializationSurrogate <|-- QuaternionSerializationSurrogate
+@enduml

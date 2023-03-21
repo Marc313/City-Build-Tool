@@ -1,0 +1,8 @@
+@startuml
+class BuildingModeFSM {
+    + BuildingModeFSM(_owner:IFSMOwner, _groundLayers:LayerMask, _buildingLayers:LayerMask)
+}
+FSM <|-- BuildingModeFSM
+BuildingModeFSM --> "groundLayers" LayerMask
+BuildingModeFSM --> "buildingLayers" LayerMask
+@enduml

@@ -1,0 +1,9 @@
+@startuml
+class Importer {
+    + ImportOBJModel(_name:string, _category:Preset.Category, _filePath:string, _xzSize:Vector2) : void
+    + ReplaceFile() : void
+    + CreateNewWithOtherName() : void
+}
+MonoBehaviour <|-- Importer
+Importer --> "importButton" Button
+@enduml

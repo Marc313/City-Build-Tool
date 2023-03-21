@@ -1,0 +1,9 @@
+@startuml
+class UserPreset {
+    + objFileName : string
+    + UserPreset(_name:string, _category:Category, _objFileName:string)
+    + UserPreset(_name:string, _category:Category, _objFileName:string, _xzSize:Vector2)
+    + <<override>> LoadInstance() : GameObject
+}
+Preset <|-- UserPreset
+@enduml

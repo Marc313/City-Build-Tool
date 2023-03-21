@@ -1,0 +1,9 @@
+@startuml
+class SaveManager {
+    + Save(_saveAs:bool) : void
+    + Load() : bool
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<SaveManager>" <|-- SaveManager
+@enduml

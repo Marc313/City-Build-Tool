@@ -1,0 +1,6 @@
+@startuml
+class StartScreen {
+    + CloseMenu() : void
+}
+Menu <|-- StartScreen
+@enduml

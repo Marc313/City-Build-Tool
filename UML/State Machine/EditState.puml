@@ -1,0 +1,10 @@
+@startuml
+class EditState {
+    + EditState(_groundLayer:LayerMask, _buildingLayer:LayerMask)
+    + <<override>> OnEnter() : void
+    + <<override>> OnExit() : void
+    + <<override>> OnFixedUpdate() : void
+    + <<override>> OnUpdate() : void
+}
+State <|-- EditState
+@enduml

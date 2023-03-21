@@ -1,0 +1,18 @@
+@startuml
+class SimpleVisualizer {
+    + Length : float <<get>>
+}
+enum EncodingLetters {
+    unknown= '1',
+    save= '[',
+    load= ']',
+    forward= 'F',
+    turnRight= '+',
+    turnLeft= '-',
+}
+MonoBehaviour <|-- SimpleVisualizer
+SimpleVisualizer --> "lSystem" LSystemGenerator
+SimpleVisualizer --> "pointPrefab" GameObject
+SimpleVisualizer --> "lineStyle" Material
+SimpleVisualizer +-- EncodingLetters
+@enduml

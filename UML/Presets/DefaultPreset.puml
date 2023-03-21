@@ -1,0 +1,7 @@
+@startuml
+class DefaultPreset {
+    + DefaultPreset(_name:string, _category:Category)
+    + <<override>> LoadInstance() : GameObject
+}
+Preset <|-- DefaultPreset
+@enduml

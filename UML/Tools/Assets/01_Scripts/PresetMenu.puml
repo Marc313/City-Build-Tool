@@ -1,0 +1,9 @@
+@startuml
+class PresetMenu {
+    + OpenMenu() : void
+    + CloseMenu() : void
+    + Submit() : void
+    + OnCategoryChanged(_index:int) : void
+}
+Menu <|-- PresetMenu
+@enduml

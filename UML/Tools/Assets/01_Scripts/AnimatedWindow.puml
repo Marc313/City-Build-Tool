@@ -1,0 +1,9 @@
+@startuml
+class AnimatedWindow {
+    + isDown : bool
+    + animationDuration : float = 0.5f
+    + MoveUp() : void
+    + MoveDown() : void
+}
+MovingObject <|-- AnimatedWindow
+@enduml

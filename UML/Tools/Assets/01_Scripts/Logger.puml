@@ -1,0 +1,5 @@
+@startuml
+class Logger <<static>> {
+    + {static} Log(_logText:string) : void
+}
+@enduml

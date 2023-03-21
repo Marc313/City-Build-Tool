@@ -1,0 +1,7 @@
+@startuml
+class sRule {
+    + letter : string
+    + GetResults() : string
+}
+ScriptableObject <|-- sRule
+@enduml

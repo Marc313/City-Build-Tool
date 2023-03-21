@@ -1,0 +1,8 @@
+@startuml
+class PlacedObject {
+    + PlacedObject(_preset:Preset, _buildingPosition:Vector3, _rotation:Quaternion)
+}
+PlacedObject --> "preset" Preset
+PlacedObject --> "buildingPos" Vector3
+PlacedObject --> "rotation" Quaternion
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+abstract class Preset {
+    + presetID : int
+    + presetName : string
+    + Preset(_name:string, _category:Category)
+    + {abstract} LoadInstance() : GameObject
+    + LoadInstance(_position:Vector3) : GameObject
+    + LoadInstance(_parent:Transform) : GameObject
+    + LoadInstance(_position:Vector3, _parent:Transform) : GameObject
+}
+enum Category {
+    None= 0,
+    Road= 1,
+    House= 2,
+    Decoration= 3,
+}
+Preset o-> "category" Category
+Preset o-> "XZSizeUnits" Vector2
+Preset +-- Category
+@enduml

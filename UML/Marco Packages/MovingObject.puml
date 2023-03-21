@@ -1,0 +1,9 @@
+@startuml
+class MovingObject {
+    + <<async>> MoveToInSeconds(oldPos:Vector3, targetPos:Vector3, timeInSeconds:float) : Task
+    + <<async>> RotateTowardsInSeconds(oldRotation:Quaternion, targetRotation:Quaternion, timeInSeconds:float) : Task
+    + <<async>> RotateWithSlerpInSeconds(oldRotation:Quaternion, targetRotation:Quaternion, timeInSeconds:float) : Task
+}
+MonoBehaviour <|-- MovingObject
+MovingObject --> "rotationCurve" AnimationCurve
+@enduml

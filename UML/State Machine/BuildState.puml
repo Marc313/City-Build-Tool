@@ -1,0 +1,10 @@
+@startuml
+class BuildState {
+    + BuildState(_groundLayer:LayerMask)
+    + <<override>> OnEnter() : void
+    + <<override>> OnExit() : void
+    + <<override>> OnFixedUpdate() : void
+    + <<override>> OnUpdate() : void
+}
+State <|-- BuildState
+@enduml
