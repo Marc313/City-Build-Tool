@@ -4,6 +4,7 @@ using UnityEngine;
 public class AnimatedWindow : MovingObject
 {
     public bool isDown;
+    public bool isMoving;
     public float animationDuration = 0.5f;
 
     private Vector3 upPos;
@@ -35,13 +36,18 @@ public class AnimatedWindow : MovingObject
 
     public void MoveUp()
     {
+        if (!isDown || isMoving) return;
         isDown = false;
-        currentTask = MoveToInSeconds(downPos, upPos, animationDuration);
+        isMoving = true;
+        currentTask = MoveToInSeconds(downPos, upPos, animationDuration, () => isMoving = false);
     }
 
     public void MoveDown()
     {
+        if (isDown || isMoving) return;
+
         isDown = true;
-        currentTask = MoveToInSeconds(upPos, downPos, animationDuration);
+        isMoving = true;
+        currentTask = MoveToInSeconds(upPos, downPos, animationDuration, () => isMoving = false);
     }
 }

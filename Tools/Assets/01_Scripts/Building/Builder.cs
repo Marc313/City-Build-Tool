@@ -13,35 +13,23 @@ public class Builder : MonoBehaviour, IFSMOwner
     [SerializeField] private LayerMask groundLayers;
     [SerializeField] private LayerMask buildingLayers;
 
-    private Dictionary<GameObject, PlacedObject> allObjects;
+    private Dictionary<GameObject, PlacedObject> allObjects = new Dictionary<GameObject, PlacedObject>();
     private Preset currentGamePreset;
-    private GameObject phantomObject;
+    private PhantomObject phantomObject;
+    public Material phantomMaterial;
     private BuildingModeFSM fsm;
     [HideInInspector] public Vector3 mouseHitPos;
 
     private bool hasStarted;
 
-
     private void Awake()
     {
         fsm = new BuildingModeFSM(this, groundLayers, buildingLayers);
-        allObjects = new Dictionary<GameObject, PlacedObject>();
     }
-
-    /*    private void OnEnable()
-        {
-            EventSystem.Subscribe(EventName.MENU_OPENED, DisableSelf);
-            EventSystem.Subscribe(EventName.MENU_CLOSED, EnableSelf);
-        }
-
-        private void OnDisable()
-        {
-            EventSystem.Unsubscribe(EventName.MENU_OPENED, DisableSelf);
-            EventSystem.Unsubscribe(EventName.MENU_CLOSED, EnableSelf);
-        }*/
 
     private void Start()
     {
+        PhantomObject.phantomMaterial = phantomMaterial;
         OnStart();
     }
 
@@ -65,7 +53,6 @@ public class Builder : MonoBehaviour, IFSMOwner
         if (UIManager.Instance.isMenuOpen) return;
 
         fsm?.OnUpdate();
-        HandleSwitchInput();
     }
 
     private void FixedUpdate()
@@ -107,7 +94,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         currentGamePreset = _preset;
         if (phantomObject != null)
         {
-            phantomObject.SetActive(false);
+            phantomObject.phantom.SetActive(false);
         }
 
         if (fsm != null
@@ -116,10 +103,10 @@ public class Builder : MonoBehaviour, IFSMOwner
             FindObjectOfType<BuildModeTab>().SetState<BuildState>();
         }
 
-        phantomObject = currentGamePreset.LoadInstance();
-        phantomObject.layer = 7;
+        phantomObject = new PhantomObject(currentGamePreset.LoadInstance());
+        phantomObject.phantom.layer = 7;
         sharedData.RegisterOrUpdate("currentGamePreset", currentGamePreset);
-        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject.phantom);
     }
 
     public List<PlacedObject> GetPlacedObjectList()
@@ -137,14 +124,14 @@ public class Builder : MonoBehaviour, IFSMOwner
             fsm?.SwitchState(_stateType);
         }
 
-        if (phantomObject != null) phantomObject.SetActive(false);
+        if (phantomObject != null) phantomObject.phantom.SetActive(false);
     }
 
     private void WriteScratchPadStartValues()
     {
         // Fields
         sharedData.RegisterOrUpdate("gridEnabled", isGridEnabled);
-        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        //sharedData.RegisterOrUpdate("phantomObject", phantomObject.phantom);
         sharedData.RegisterOrUpdate("currentGamePreset", currentGamePreset);
 
         // Actions
@@ -154,58 +141,24 @@ public class Builder : MonoBehaviour, IFSMOwner
         sharedData.RegisterOrUpdate("DemolishFunc", (Action<GameObject>)((GameObject go) => DemolishObject(go)));
     }
 
-/*    private void EnableSelf(object _value = null)
-    {
-        isEnabled = true;
-    }
-
-    private void DisableSelf(object _value = null)
-    {
-        isEnabled = false;
-    }*/
-
-    private void HandleSwitchInput()
-    {
-/*        State currentState = fsm.GetCurrentState();
-        if (currentState == null)
-        {
-            Debug.Log("CurrentState not found");
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1) 
-            && fsm != null
-            && currentState.GetType() != typeof(BuildState))
-        {
-            fsm.SwitchState(typeof(BuildState));
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) 
-        {
-
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3)
-            && fsm != null
-            && currentState.GetType() != typeof(DemolishState)) 
-        {
-            fsm.SwitchState(typeof(DemolishState));
-        }*/
-    }
-
     private void PlaceObject(Vector3 _groundPos, Quaternion _currentRotation)
     {
-        allObjects.Add(phantomObject, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));
+        if (phantomObject == null) phantomObject = new PhantomObject(sharedData.Get<GameObject>("phantomObject"));
+        phantomObject.ObtainOldMaterials();
+        allObjects.Add(phantomObject.phantom, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));
 
         // Overwrite phantomObject so the old phantom will stay in place
-        phantomObject = currentGamePreset.LoadInstance(_groundPos, transform);
-        phantomObject.transform.rotation = _currentRotation;
-        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        phantomObject = new PhantomObject(currentGamePreset.LoadInstance(_groundPos, transform));
+        phantomObject.phantom.transform.rotation = _currentRotation;
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject.phantom);
     }
 
     private void ReplaceObject(Vector3 _groundPos, Quaternion _currentRotation)
     {
-        allObjects.Add(phantomObject, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));
+        phantomObject.ObtainOldMaterials();
+        allObjects.Add(phantomObject.phantom, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));
         phantomObject = null;
-        sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        sharedData.RegisterOrUpdate("phantomObject", phantomObject.phantom);
     }
 
     private GameObject EditObject(GameObject _gameObject)
@@ -220,8 +173,8 @@ public class Builder : MonoBehaviour, IFSMOwner
         if (allObjects.ContainsKey(fullObject))
         {
             currentGamePreset = allObjects[fullObject].preset;
-            phantomObject = fullObject;
-            sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+            phantomObject = new PhantomObject(fullObject);
+            sharedData.RegisterOrUpdate("phantomObject", phantomObject.phantom);
             allObjects.Remove(fullObject);
             fullObject.transform.parent = null;
             return fullObject;

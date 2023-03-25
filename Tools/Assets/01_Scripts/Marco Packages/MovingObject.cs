@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public class MovingObject : MonoBehaviour
     /// <param presetNameField="oldPos"></param>
     /// <param presetNameField="targetPos"></param>
     /// <param presetNameField="timeInSeconds"></param>
-    public async Task MoveToInSeconds(Vector3 oldPos, Vector3 targetPos, float timeInSeconds)
+    public async Task MoveToInSeconds(Vector3 oldPos, Vector3 targetPos, float timeInSeconds, Action _onDone = null)
     {
         transform.position = oldPos;
         float distance = Vector3.Distance(oldPos, targetPos);
@@ -26,7 +27,7 @@ public class MovingObject : MonoBehaviour
         }
         transform.position = targetPos;
 
-        //onDone?.Invoke();
+        _onDone?.Invoke();
     }
 
     /**

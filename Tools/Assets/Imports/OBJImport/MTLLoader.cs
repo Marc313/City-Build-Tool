@@ -164,7 +164,7 @@ public class MTLLoader {
                 continue;
             }
 
-            //anything past here requires a material instance
+            //anything past here requires a material phantom
             if (currentMaterial == null)
                 continue;
 

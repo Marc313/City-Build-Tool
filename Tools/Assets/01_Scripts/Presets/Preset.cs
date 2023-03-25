@@ -45,19 +45,19 @@ public abstract class Preset
     /// <summary>
     /// Loads and instantiates the model corresponding to this preset
     /// </summary>
-    /// <returns> Returns an instance of the GameObject containing the loaded preset model </returns>
+    /// <returns> Returns an phantom of the GameObject containing the loaded preset model </returns>
     public abstract GameObject LoadInstance();
     /// <summary>
     /// Loads and instantiates the model corresponding to this preset
     /// </summary>
-    /// <param presetNameField="_position">Position applied to the instance's transform</param>
-    /// <param presetNameField="_rotation">Rotation applied to the instance's transform</param>
-    /// <returns> Returns an instance of the GameObject containing the loaded preset model </returns>
+    /// <param presetNameField="_position">Position applied to the phantom's transform</param>
+    /// <param presetNameField="_rotation">Rotation applied to the phantom's transform</param>
+    /// <returns> Returns an phantom of the GameObject containing the loaded preset model </returns>
     public GameObject LoadInstance(Vector3 _position)
     {
         GameObject instance = LoadInstance();
         instance.transform.position = _position;
-        //instance.transform.rotation = defaultRotation;
+        //phantom.transform.rotation = defaultRotation;
         return instance;
     }
     

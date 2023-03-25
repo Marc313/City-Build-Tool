@@ -38,7 +38,7 @@ public class ScreenshotManager : Singleton<ScreenshotManager>
             // If no screenshot
             if (!FilepathManager.ScreenshotExists(preset.presetName))
             {
-                StartCoroutine(nameof(TakeScreenshot), preset);
+                StartCoroutine(TakeScreenshot(preset, null));
                 yield return new WaitForSeconds(.2f);
             }
 
