@@ -1,0 +1,7 @@
+@startuml
+class Exporter {
+    + fileName : string = "City.fbx"
+}
+MonoBehaviour <|-- Exporter
+Exporter --> "exportButton" Button
+@enduml

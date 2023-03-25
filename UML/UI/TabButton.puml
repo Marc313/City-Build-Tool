@@ -1,0 +1,7 @@
+@startuml
+class TabButton {
+}
+MonoBehaviour <|-- TabButton
+TabButton --> "tabGroup" TabGroup
+TabButton --> "backgroundImage" Image
+@enduml

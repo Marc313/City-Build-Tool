@@ -1,0 +1,13 @@
+@startuml
+class SaveData {
+    + projectName : string
+    + SaveData(_placedObjects:List<PlacedObject>, _presets:List<Preset>)
+    + SaveData(_placedObjects:List<PlacedObject>, _presets:List<Preset>, _projectName:string)
+    + SaveData(_placedObjects:List<PlacedObject>, _presets:List<Preset>, _projectName:string, _camPos:Vector3)
+}
+class "List`1"<T> {
+}
+SaveData --> "builtObjects<PlacedObject>" "List`1"
+SaveData --> "presetCatalogue<Preset>" "List`1"
+SaveData --> "cameraPosition" Vector3
+@enduml

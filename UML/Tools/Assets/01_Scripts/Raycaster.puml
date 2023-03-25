@@ -1,0 +1,9 @@
+@startuml
+class Raycaster {
+    + raycastRange : float = 50f
+    + GetRaycastHit(_hit:RaycastHit, _layers:LayerMask) : bool
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<Raycaster>" <|-- Raycaster
+@enduml

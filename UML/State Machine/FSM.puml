@@ -1,0 +1,11 @@
+@startuml
+abstract class FSM {
+    + FSM(_owner:IFSMOwner)
+    + Start() : void
+    + OnUpdate() : void
+    + OnFixedUpdate() : void
+    + ExitCurrentState() : void
+    + SwitchState(stateType:Type) : void
+    + GetCurrentState() : State
+}
+@enduml

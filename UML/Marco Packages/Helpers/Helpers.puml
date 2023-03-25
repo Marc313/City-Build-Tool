@@ -1,0 +1,11 @@
+@startuml
+class Helpers <<static>> {
+    + {static} Map(min1:float, max1:float, min2:float, max2:float, value:float) : float
+    + {static} ToVector3Int(vector:Vector3) : Vector3Int
+    + {static} SetXPosition(_transform:Transform, _x:float) : void
+    + {static} SetYPosition(_transform:Transform, _y:float) : void
+    + {static} SetZPosition(_transform:Transform, _z:float) : void
+    + {static} RotateYToRight(_object:GameObject, _angle:float) : Quaternion
+    + {static} SplitSubmeshes(_mesh:Mesh, _materials:Material[], _meshRenderer:MeshRenderer) : Mesh[]
+}
+@enduml

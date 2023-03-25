@@ -1,0 +1,6 @@
+@startuml
+class Grid <<static>> {
+    + {static} cellSize : float = 1f
+    + {static} ToGridPos(_pos:Vector3) : Vector3
+}
+@enduml

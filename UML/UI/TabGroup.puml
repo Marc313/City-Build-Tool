@@ -1,0 +1,11 @@
+@startuml
+class TabGroup {
+    + Add(_tabButton:TabButton) : void
+    + OnTabExit(_button:TabButton) : void
+    + OnTabSelected(_button:TabButton) : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- TabGroup
+TabGroup --> "tabButtons<TabButton>" "List`1"
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class Vector2SerializationSurrogate {
+    + GetObjectData(obj:object, info:SerializationInfo, context:StreamingContext) : void
+    + SetObjectData(obj:object, info:SerializationInfo, context:StreamingContext, selector:ISurrogateSelector) : object
+}
+ISerializationSurrogate <|-- Vector2SerializationSurrogate
+@enduml

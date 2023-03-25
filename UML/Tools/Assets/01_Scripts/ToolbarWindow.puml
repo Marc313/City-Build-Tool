@@ -1,0 +1,5 @@
+@startuml
+class ToolbarWindow {
+}
+MonoBehaviour <|-- ToolbarWindow
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+class MenuFunctions {
+    + Quit() : void
+}
+ScriptableObject <|-- MenuFunctions
+@enduml

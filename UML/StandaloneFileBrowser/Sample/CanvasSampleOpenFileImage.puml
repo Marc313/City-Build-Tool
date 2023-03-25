@@ -1,0 +1,9 @@
+@startuml
+class CanvasSampleOpenFileImage {
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+}
+MonoBehaviour <|-- CanvasSampleOpenFileImage
+IPointerDownHandler <|-- CanvasSampleOpenFileImage
+CanvasSampleOpenFileImage --> "output" RawImage
+@enduml

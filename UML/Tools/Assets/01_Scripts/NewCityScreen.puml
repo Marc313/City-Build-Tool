@@ -1,0 +1,6 @@
+@startuml
+class NewCityScreen {
+    + InjectStartScreen(_startScreen:StartScreen) : void
+}
+Menu <|-- NewCityScreen
+@enduml

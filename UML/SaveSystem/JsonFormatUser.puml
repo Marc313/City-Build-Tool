@@ -1,0 +1,8 @@
+@startuml
+class JsonFormatUser {
+    + JsonFormatUser()
+    + Deserialize() : void
+    + Serialize() : void
+}
+IFormatter <|-- JsonFormatUser
+@enduml

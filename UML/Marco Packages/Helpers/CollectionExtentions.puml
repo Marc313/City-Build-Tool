@@ -1,0 +1,5 @@
+@startuml
+class CollectionExtentions <<static>> {
+    + {static} GetRandomEntry(_array:T[]) : T
+}
+@enduml

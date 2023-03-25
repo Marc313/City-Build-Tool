@@ -1,0 +1,13 @@
+@startuml
+class UIList {
+    + UIList(_prefab:GameObject, _parent:GameObject, _elementOffset:float, _direction:Vector3)
+    + AddElement() : GameObject
+    + Reset() : void
+    + EnableParent(_enabled:bool) : void
+    + GetParent() : GameObject
+    + GetTotalSize() : float
+}
+class "List`1"<T> {
+}
+UIList o-> "elements<GameObject>" "List`1"
+@enduml

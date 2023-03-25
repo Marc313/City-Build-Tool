@@ -1,0 +1,9 @@
+@startuml
+class BasicSample {
+    + SetFullScreen(fullScreenValue:bool) : void
+    OnGUI() : void
+    + WriteResult(paths:string[]) : void
+    + WriteResult(path:string) : void
+}
+MonoBehaviour <|-- BasicSample
+@enduml

@@ -1,0 +1,11 @@
+@startuml
+class CanvasSampleSaveFileImage {
+    Awake() : void
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+    + OnClick() : void
+}
+MonoBehaviour <|-- CanvasSampleSaveFileImage
+IPointerDownHandler <|-- CanvasSampleSaveFileImage
+CanvasSampleSaveFileImage --> "output" Text
+@enduml

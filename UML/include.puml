@@ -1,0 +1,483 @@
+@startuml
+class DuplicateModelMenu {
+}
+Menu <|-- DuplicateModelMenu
+class CamNavigation {
+    + LoadPosition(_position:Vector3) : void
+}
+MonoBehaviour <|-- CamNavigation
+class Raycaster {
+    + raycastRange : float = 50f
+    + GetRaycastHit(_hit:RaycastHit, _layers:LayerMask) : bool
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<Raycaster>" <|-- Raycaster
+class Logger <<static>> {
+    + {static} Log(_logText:string) : void
+}
+class NewCityScreen {
+    + InjectStartScreen(_startScreen:StartScreen) : void
+}
+Menu <|-- NewCityScreen
+class ToolbarWindow {
+}
+MonoBehaviour <|-- ToolbarWindow
+class StartScreen {
+    + CloseMenu() : void
+}
+Menu <|-- StartScreen
+class AnimatedWindow {
+    + isDown : bool
+    + animationDuration : float = 0.5f
+    + MoveUp() : void
+    + MoveDown() : void
+}
+MovingObject <|-- AnimatedWindow
+class PresetMenu {
+    + OpenMenu() : void
+    + CloseMenu() : void
+    + Submit() : void
+    + OnCategoryChanged(_index:int) : void
+}
+Menu <|-- PresetMenu
+class CursorManager {
+    + isMenuOpen : bool
+    + isAllowedOnScreen : bool
+    + {static} IsMouseOverUI() : bool
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<CursorManager>" <|-- CursorManager
+CursorManager --> "crosshair" Texture2D
+class ScreenshotManager {
+    + ScreenshotAllPresets(_presets:List<Preset>) : void
+    + ScreenshotAllPresetsRoutine(_presets:List<Preset>) : IEnumerator
+    + AddScreenshot(value:object) : void
+    + TakeScreenshot(_preset:Preset, _onDone:Action) : IEnumerator
+    + FindThumbnailTaker() : ThumbnailTaker
+}
+class "Singleton`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+"Singleton`1" "<ScreenshotManager>" <|-- ScreenshotManager
+ScreenshotManager o-> "presetSpriteDict<Preset,Sprite>" "Dictionary`2"
+class ThumbnailTaker {
+    + screenshotWidth : int = 512
+    + screenshotHeight : int = 512
+    + TakeScreenshot(_targetObject:GameObject, _presetName:string, _onDone:Action) : void
+}
+MonoBehaviour <|-- ThumbnailTaker
+class PngToSprite <<static>> {
+    + {static} ConvertToSprite(_width:int, _height:int, _pngPath:string) : Sprite
+}
+class SaveSystem <<static>> {
+    + {static} fileName : string = "newCity"
+    + {static} SaveAs(_data:SaveData) : bool
+    + {static} Save(_data:SaveData) : bool
+    + {static} Load() : SaveData
+    + {static} SaveExists() : bool
+    + {static} GetFilePath() : string
+    + {static} GetBinaryFormatter() : BinaryFormatter
+}
+class Exporter {
+    + fileName : string = "City.fbx"
+}
+MonoBehaviour <|-- Exporter
+Exporter --> "exportButton" Button
+class Vector2SerializationSurrogate {
+    + GetObjectData(obj:object, info:SerializationInfo, context:StreamingContext) : void
+    + SetObjectData(obj:object, info:SerializationInfo, context:StreamingContext, selector:ISurrogateSelector) : object
+}
+ISerializationSurrogate <|-- Vector2SerializationSurrogate
+class JsonFormatUser {
+    + JsonFormatUser()
+    + Deserialize() : void
+    + Serialize() : void
+}
+IFormatter <|-- JsonFormatUser
+interface IFormatter {
+    + Serialize() : void
+    + Deserialize() : void
+}
+class QuaternionSerializationSurrogate {
+    + GetObjectData(obj:object, info:SerializationInfo, context:StreamingContext) : void
+    + SetObjectData(obj:object, info:SerializationInfo, context:StreamingContext, selector:ISurrogateSelector) : object
+}
+ISerializationSurrogate <|-- QuaternionSerializationSurrogate
+class BinaryFormatUser {
+    Start() : void
+    Update() : void
+}
+MonoBehaviour <|-- BinaryFormatUser
+class SaveManager {
+    + Save(_saveAs:bool) : void
+    + Load() : bool
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<SaveManager>" <|-- SaveManager
+class Importer {
+    + ImportOBJModel(_name:string, _category:Preset.Category, _filePath:string, _xzSize:Vector2) : void
+    + ReplaceFile() : void
+    + CreateNewWithOtherName() : void
+}
+MonoBehaviour <|-- Importer
+Importer --> "importButton" Button
+class Vector3SerializationSurrogate {
+    + GetObjectData(obj:object, info:SerializationInfo, context:StreamingContext) : void
+    + SetObjectData(obj:object, info:SerializationInfo, context:StreamingContext, selector:ISurrogateSelector) : object
+}
+ISerializationSurrogate <|-- Vector3SerializationSurrogate
+class FilepathManager <<static>> {
+    + {static} projectName : string = null
+    + {static} GetApplicationDirectory() : string
+    + {static} ScreenshotExists(_presetName:string) : bool
+    + {static} GetScreenshotPath(_presetName:string) : string
+    + {static} CreateUserModelDirectory() : void
+    + {static} GetUserModelDirectory() : string
+    + {static} ClearUserModelDirectory() : void
+    + {static} GetProjectDirectory() : string
+    + {static} GetSavePath() : string
+    + {static} CheckProjectPath() : bool
+}
+class SaveData {
+    + projectName : string
+    + SaveData(_placedObjects:List<PlacedObject>, _presets:List<Preset>)
+    + SaveData(_placedObjects:List<PlacedObject>, _presets:List<Preset>, _projectName:string)
+    + SaveData(_placedObjects:List<PlacedObject>, _presets:List<Preset>, _projectName:string, _camPos:Vector3)
+}
+class "List`1"<T> {
+}
+SaveData --> "builtObjects<PlacedObject>" "List`1"
+SaveData --> "presetCatalogue<Preset>" "List`1"
+SaveData --> "cameraPosition" Vector3
+class Menu {
+}
+MonoBehaviour <|-- Menu
+class Grid <<static>> {
+    + {static} cellSize : float = 1f
+    + {static} ToGridPos(_pos:Vector3) : Vector3
+}
+class PlacedObject {
+    + PlacedObject(_preset:Preset, _buildingPosition:Vector3, _rotation:Quaternion)
+}
+PlacedObject --> "preset" Preset
+PlacedObject --> "buildingPos" Vector3
+PlacedObject --> "rotation" Quaternion
+class Builder {
+    + isGridEnabled : bool
+    + OnStart() : void
+    + Reconstruct(_gameObjects:List<PlacedObject>) : void
+    + SetCurrentPreset(_preset:Preset) : void
+    + GetPlacedObjectList() : List<PlacedObject>
+    + SwitchState(_stateType:Type) : void
+}
+MonoBehaviour <|-- Builder
+IFSMOwner <|-- Builder
+Builder o-> "sharedData" ScratchPad
+Builder --> "library" PresetLibrary
+Builder --> "mouseHitPos" Vector3
+class ExtensionFilter <<struct>> {
+    + Name : string
+    + ExtensionFilter(filterName:string, filterExtensions:string[])
+}
+class StandaloneFileBrowser {
+    {static} StandaloneFileBrowser()
+    + {static} OpenFilePanel(title:string, directory:string, extension:string, multiselect:bool) : string[]
+    + {static} OpenFilePanel(title:string, directory:string, extensions:ExtensionFilter[], multiselect:bool) : string[]
+    + {static} OpenFilePanelAsync(title:string, directory:string, extension:string, multiselect:bool, cb:Action<string[]>) : void
+    + {static} OpenFilePanelAsync(title:string, directory:string, extensions:ExtensionFilter[], multiselect:bool, cb:Action<string[]>) : void
+    + {static} OpenFolderPanel(title:string, directory:string, multiselect:bool) : string[]
+    + {static} OpenFolderPanelAsync(title:string, directory:string, multiselect:bool, cb:Action<string[]>) : void
+    + {static} SaveFilePanel(title:string, directory:string, defaultName:string, extension:string) : string
+    + {static} SaveFilePanel(title:string, directory:string, defaultName:string, extensions:ExtensionFilter[]) : string
+    + {static} SaveFilePanelAsync(title:string, directory:string, defaultName:string, extension:string, cb:Action<string>) : void
+    + {static} SaveFilePanelAsync(title:string, directory:string, defaultName:string, extensions:ExtensionFilter[], cb:Action<string>) : void
+}
+interface IStandaloneFileBrowser {
+    OpenFilePanel(title:string, directory:string, extensions:ExtensionFilter[], multiselect:bool) : string[]
+    OpenFolderPanel(title:string, directory:string, multiselect:bool) : string[]
+    SaveFilePanel(title:string, directory:string, defaultName:string, extensions:ExtensionFilter[]) : string
+    OpenFilePanelAsync(title:string, directory:string, extensions:ExtensionFilter[], multiselect:bool, cb:Action<string[]>) : void
+    OpenFolderPanelAsync(title:string, directory:string, multiselect:bool, cb:Action<string[]>) : void
+    SaveFilePanelAsync(title:string, directory:string, defaultName:string, extensions:ExtensionFilter[], cb:Action<string>) : void
+}
+class DefaultPreset {
+    + DefaultPreset(_name:string, _category:Category)
+    + <<override>> LoadInstance() : GameObject
+}
+Preset <|-- DefaultPreset
+class PresetCatalogue <<static>> {
+    + {static} SetDefaultPresets(_presetList:List<DefaultPresetLink>, _addToPresets:bool) : void
+    + {static} LoadList(_presetList:List<Preset>) : void
+    + {static} GetPresetByID(_presetID:int) : Preset
+    + {static} GetPrefabByPreset(_preset:Preset) : GameObject
+    + {static} PresetWithOBJNameExits(_objName:string) : bool
+    + {static} AddNewEntry(_preset:Preset) : void
+    + {static} GetFirstAvailableID() : int
+}
+class "List`1"<T> {
+}
+PresetCatalogue o-> "allPresets<Preset>" "List`1"
+PresetCatalogue o-> "userPresets<Preset>" "List`1"
+PresetCatalogue o-> "defaultPresets<DefaultPresetLink>" "List`1"
+abstract class Preset {
+    + presetID : int
+    + presetName : string
+    + Preset(_name:string, _category:Category)
+    + {abstract} LoadInstance() : GameObject
+    + LoadInstance(_position:Vector3) : GameObject
+    + LoadInstance(_parent:Transform) : GameObject
+    + LoadInstance(_position:Vector3, _parent:Transform) : GameObject
+}
+enum Category {
+    None= 0,
+    Road= 1,
+    House= 2,
+    Decoration= 3,
+}
+Preset o-> "category" Category
+Preset o-> "XZSizeUnits" Vector2
+Preset +-- Category
+class DefaultPresetLink {
+    + Debug() : void
+}
+ScriptableObject <|-- DefaultPresetLink
+DefaultPresetLink --> "preset" DefaultPreset
+DefaultPresetLink --> "prefab" GameObject
+class UserPreset {
+    + objFileName : string
+    + UserPreset(_name:string, _category:Category, _objFileName:string)
+    + UserPreset(_name:string, _category:Category, _objFileName:string, _xzSize:Vector2)
+    + <<override>> LoadInstance() : GameObject
+}
+Preset <|-- UserPreset
+class Instantiator {
+    + {static} Instantiate(_object:GameObject) : GameObject
+}
+MonoBehaviour <|-- Instantiator
+class PresetLibrary {
+}
+class "List`1"<T> {
+}
+ScriptableObject <|-- PresetLibrary
+PresetLibrary --> "presets<DefaultPresetLink>" "List`1"
+class BuildState {
+    + BuildState(_groundLayer:LayerMask)
+    + <<override>> OnEnter() : void
+    + <<override>> OnExit() : void
+    + <<override>> OnFixedUpdate() : void
+    + <<override>> OnUpdate() : void
+}
+State <|-- BuildState
+class ScratchPad {
+    + RegisterOrUpdate(_id:string, _data:object) : void
+    + Get(_id:string) : T
+}
+interface IFSMOwner {
+}
+IFSMOwner --> "sharedData" ScratchPad
+class BuildingModeFSM {
+    + BuildingModeFSM(_owner:IFSMOwner, _groundLayers:LayerMask, _buildingLayers:LayerMask)
+}
+FSM <|-- BuildingModeFSM
+BuildingModeFSM --> "groundLayers" LayerMask
+BuildingModeFSM --> "buildingLayers" LayerMask
+abstract class State {
+    + InjectFSM(_fsm:FSM, _scratchPad:ScratchPad) : void
+    + {abstract} OnUpdate() : void
+    + {abstract} OnFixedUpdate() : void
+    + {abstract} OnEnter() : void
+    + {abstract} OnExit() : void
+}
+abstract class FSM {
+    + FSM(_owner:IFSMOwner)
+    + Start() : void
+    + OnUpdate() : void
+    + OnFixedUpdate() : void
+    + ExitCurrentState() : void
+    + SwitchState(stateType:Type) : void
+    + GetCurrentState() : State
+}
+class DemolishState {
+    + DemolishState(_buildingLayer:LayerMask)
+    + <<override>> OnEnter() : void
+    + <<override>> OnExit() : void
+    + <<override>> OnFixedUpdate() : void
+    + <<override>> OnUpdate() : void
+}
+State <|-- DemolishState
+class EditState {
+    + EditState(_groundLayer:LayerMask, _buildingLayer:LayerMask)
+    + <<override>> OnEnter() : void
+    + <<override>> OnExit() : void
+    + <<override>> OnFixedUpdate() : void
+    + <<override>> OnUpdate() : void
+}
+State <|-- EditState
+class UIManager {
+    + isMenuOpen : bool
+    + AddPresetButton(_preset:Preset) : void
+    + ShowBuilderUI() : void
+    + EnableLoadingScreen(_isEnabled:bool) : void
+    + ShowLogText(_text:string) : void
+    + AssignSpriteToButton(_preset:Preset, _sprite:Sprite) : void
+}
+class "Singleton`1"<T> {
+}
+"Singleton`1" "<UIManager>" <|-- UIManager
+class TabGroup {
+    + Add(_tabButton:TabButton) : void
+    + OnTabExit(_button:TabButton) : void
+    + OnTabSelected(_button:TabButton) : void
+}
+class "List`1"<T> {
+}
+MonoBehaviour <|-- TabGroup
+TabGroup --> "tabButtons<TabButton>" "List`1"
+class UIContentFitter {
+    + Resize(_newWidth:float) : void
+}
+MonoBehaviour <|-- UIContentFitter
+class TabButton {
+}
+MonoBehaviour <|-- TabButton
+TabButton --> "tabGroup" TabGroup
+TabButton --> "backgroundImage" Image
+class UIList {
+    + UIList(_prefab:GameObject, _parent:GameObject, _elementOffset:float, _direction:Vector3)
+    + AddElement() : GameObject
+    + Reset() : void
+    + EnableParent(_enabled:bool) : void
+    + GetParent() : GameObject
+    + GetTotalSize() : float
+}
+class "List`1"<T> {
+}
+UIList o-> "elements<GameObject>" "List`1"
+class MenuFunctions {
+    + Quit() : void
+}
+ScriptableObject <|-- MenuFunctions
+class MovingObject {
+    + <<async>> MoveToInSeconds(oldPos:Vector3, targetPos:Vector3, timeInSeconds:float) : Task
+    + <<async>> RotateTowardsInSeconds(oldRotation:Quaternion, targetRotation:Quaternion, timeInSeconds:float) : Task
+    + <<async>> RotateWithSlerpInSeconds(oldRotation:Quaternion, targetRotation:Quaternion, timeInSeconds:float) : Task
+}
+MonoBehaviour <|-- MovingObject
+MovingObject --> "rotationCurve" AnimationCurve
+class AgentParameters {
+    + currentRoadLength : float
+}
+AgentParameters --> "position" Vector3
+AgentParameters --> "direction" Vector3
+class LSystemGenerator {
+    + rootSentence : string
+    + iterationLimit : int = 2
+    + randomIgnoreRuleModifier : bool = true
+    + ruleIgnoreChance : float = 0.3f
+    + GenerateSentence(word:string) : string
+}
+MonoBehaviour <|-- LSystemGenerator
+class sRule {
+    + letter : string
+    + GetResults() : string
+}
+ScriptableObject <|-- sRule
+class SimpleVisualizer {
+    + Length : float <<get>>
+}
+enum EncodingLetters {
+    unknown= '1',
+    save= '[',
+    load= ']',
+    forward= 'F',
+    turnRight= '+',
+    turnLeft= '-',
+}
+MonoBehaviour <|-- SimpleVisualizer
+SimpleVisualizer --> "lSystem" LSystemGenerator
+SimpleVisualizer --> "pointPrefab" GameObject
+SimpleVisualizer --> "lineStyle" Material
+SimpleVisualizer +-- EncodingLetters
+class CanvasSampleOpenFileTextMultiple {
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+}
+MonoBehaviour <|-- CanvasSampleOpenFileTextMultiple
+IPointerDownHandler <|-- CanvasSampleOpenFileTextMultiple
+CanvasSampleOpenFileTextMultiple --> "output" Text
+class CanvasSampleOpenFileImage {
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+}
+MonoBehaviour <|-- CanvasSampleOpenFileImage
+IPointerDownHandler <|-- CanvasSampleOpenFileImage
+CanvasSampleOpenFileImage --> "output" RawImage
+class CanvasSampleOpenFileText {
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+}
+MonoBehaviour <|-- CanvasSampleOpenFileText
+IPointerDownHandler <|-- CanvasSampleOpenFileText
+CanvasSampleOpenFileText --> "output" Text
+class BasicSample {
+    + SetFullScreen(fullScreenValue:bool) : void
+    OnGUI() : void
+    + WriteResult(paths:string[]) : void
+    + WriteResult(path:string) : void
+}
+MonoBehaviour <|-- BasicSample
+class CanvasSampleSaveFileImage {
+    Awake() : void
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+    + OnClick() : void
+}
+MonoBehaviour <|-- CanvasSampleSaveFileImage
+IPointerDownHandler <|-- CanvasSampleSaveFileImage
+CanvasSampleSaveFileImage --> "output" Text
+class CanvasSampleSaveFileText {
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+    + OnClick() : void
+}
+MonoBehaviour <|-- CanvasSampleSaveFileText
+IPointerDownHandler <|-- CanvasSampleSaveFileText
+CanvasSampleSaveFileText --> "output" Text
+class Helpers <<static>> {
+    + {static} Map(min1:float, max1:float, min2:float, max2:float, value:float) : float
+    + {static} ToVector3Int(vector:Vector3) : Vector3Int
+    + {static} SetXPosition(_transform:Transform, _x:float) : void
+    + {static} SetYPosition(_transform:Transform, _y:float) : void
+    + {static} SetZPosition(_transform:Transform, _z:float) : void
+    + {static} RotateYToRight(_object:GameObject, _angle:float) : Quaternion
+    + {static} SplitSubmeshes(_mesh:Mesh, _materials:Material[], _meshRenderer:MeshRenderer) : Mesh[]
+}
+class CollectionExtentions <<static>> {
+    + {static} GetRandomEntry(_array:T[]) : T
+}
+class ServiceLocator <<static>> {
+    + {static} RegisterService(t:T) : void
+    + {static} GetService() : T
+}
+abstract class "Singleton`1"<T> {
+    + {static} Instance : T <<get>> <<set>>
+}
+MonoBehaviour <|-- "Singleton`1"
+enum EventName {
+    PRESETS_LOADED= 0,
+    TAB_CHANGED= 1,
+    ON_OBJNAME_ALREADY_EXISTS= 2,
+    IMPORT_SUCCESS= 3,
+    MENU_OPENED= 4,
+    MENU_CLOSED= 5,
+}
+class EventSystem <<static>> {
+    + {static} Subscribe(_evt:EventName, _func:EventCallback) : void
+    + {static} Unsubscribe(_evt:EventName, _func:EventCallback) : void
+    + {static} RaiseEvent(_evt:EventName, _value:object) : void
+}
+@enduml

@@ -1,0 +1,15 @@
+@startuml
+class ScreenshotManager {
+    + ScreenshotAllPresets(_presets:List<Preset>) : void
+    + ScreenshotAllPresetsRoutine(_presets:List<Preset>) : IEnumerator
+    + AddScreenshot(value:object) : void
+    + TakeScreenshot(_preset:Preset, _onDone:Action) : IEnumerator
+    + FindThumbnailTaker() : ThumbnailTaker
+}
+class "Singleton`1"<T> {
+}
+class "Dictionary`2"<T1,T2> {
+}
+"Singleton`1" "<ScreenshotManager>" <|-- ScreenshotManager
+ScreenshotManager o-> "presetSpriteDict<Preset,Sprite>" "Dictionary`2"
+@enduml

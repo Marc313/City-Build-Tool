@@ -1,0 +1,6 @@
+@startuml
+class CamNavigation {
+    + LoadPosition(_position:Vector3) : void
+}
+MonoBehaviour <|-- CamNavigation
+@enduml

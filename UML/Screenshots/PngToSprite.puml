@@ -1,0 +1,5 @@
+@startuml
+class PngToSprite <<static>> {
+    + {static} ConvertToSprite(_width:int, _height:int, _pngPath:string) : Sprite
+}
+@enduml

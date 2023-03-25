@@ -1,0 +1,11 @@
+@startuml
+class SaveSystem <<static>> {
+    + {static} fileName : string = "newCity"
+    + {static} SaveAs(_data:SaveData) : bool
+    + {static} Save(_data:SaveData) : bool
+    + {static} Load() : SaveData
+    + {static} SaveExists() : bool
+    + {static} GetFilePath() : string
+    + {static} GetBinaryFormatter() : BinaryFormatter
+}
+@enduml

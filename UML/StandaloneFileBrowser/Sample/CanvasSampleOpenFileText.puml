@@ -1,0 +1,9 @@
+@startuml
+class CanvasSampleOpenFileText {
+    + OnPointerDown(eventData:PointerEventData) : void
+    Start() : void
+}
+MonoBehaviour <|-- CanvasSampleOpenFileText
+IPointerDownHandler <|-- CanvasSampleOpenFileText
+CanvasSampleOpenFileText --> "output" Text
+@enduml

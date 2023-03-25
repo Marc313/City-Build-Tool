@@ -1,0 +1,6 @@
+@startuml
+class UIContentFitter {
+    + Resize(_newWidth:float) : void
+}
+MonoBehaviour <|-- UIContentFitter
+@enduml

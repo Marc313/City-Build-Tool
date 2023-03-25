@@ -1,0 +1,8 @@
+@startuml
+class PresetLibrary {
+}
+class "List`1"<T> {
+}
+ScriptableObject <|-- PresetLibrary
+PresetLibrary --> "presets<DefaultPresetLink>" "List`1"
+@enduml

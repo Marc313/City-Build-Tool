@@ -1,0 +1,10 @@
+@startuml
+class LSystemGenerator {
+    + rootSentence : string
+    + iterationLimit : int = 2
+    + randomIgnoreRuleModifier : bool = true
+    + ruleIgnoreChance : float = 0.3f
+    + GenerateSentence(word:string) : string
+}
+MonoBehaviour <|-- LSystemGenerator
+@enduml

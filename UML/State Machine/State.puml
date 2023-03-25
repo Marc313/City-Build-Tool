@@ -1,0 +1,9 @@
+@startuml
+abstract class State {
+    + InjectFSM(_fsm:FSM, _scratchPad:ScratchPad) : void
+    + {abstract} OnUpdate() : void
+    + {abstract} OnFixedUpdate() : void
+    + {abstract} OnEnter() : void
+    + {abstract} OnExit() : void
+}
+@enduml

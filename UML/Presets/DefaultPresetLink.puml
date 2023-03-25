@@ -1,0 +1,8 @@
+@startuml
+class DefaultPresetLink {
+    + Debug() : void
+}
+ScriptableObject <|-- DefaultPresetLink
+DefaultPresetLink --> "preset" DefaultPreset
+DefaultPresetLink --> "prefab" GameObject
+@enduml
