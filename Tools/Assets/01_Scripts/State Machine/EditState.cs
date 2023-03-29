@@ -9,24 +9,26 @@ public class EditState : State
     private LayerMask buildingLayer;
     private Vector3 mouseHitPos;
 
-    private Func<GameObject, GameObject> Pickup;
+    private Func<GameObject, PhantomObject> Pickup;
     private Action<Vector3, Quaternion> ReplaceObject;
 
-    private GameObject pickedUpObject;
+    private PhantomObject pickedUpObject;
     private bool gridEnabled;
+    private BuildingCursor cursorInd;
 
-    public EditState(LayerMask _groundLayer, LayerMask _buildingLayer)
+    public EditState(LayerMask _groundLayer, LayerMask _buildingLayer, BuildingCursor _cursor)
     {
         groundLayer = _groundLayer;
         buildingLayer = _buildingLayer;
         raycaster = Raycaster.Instance;
+        cursorInd = _cursor;
     }
 
     public override void OnEnter()
     {
         Debug.Log("Edit");
         gridEnabled = scratchPad.Get<bool>("gridEnabled");
-        Pickup = scratchPad.Get<Func<GameObject, GameObject>>("EditFunc");
+        Pickup = scratchPad.Get<Func<GameObject, PhantomObject>>("EditFunc");
         ReplaceObject = scratchPad.Get<Action<Vector3, Quaternion>>("ReplaceFunc");
     }
 
@@ -40,6 +42,7 @@ public class EditState : State
     {
     }
 
+    // More inheritence! All states now alike
     public override void OnUpdate()
     {
         if (pickedUpObject == null)
@@ -59,12 +62,12 @@ public class EditState : State
         {
             mouseHitPos = hit.point;
             mouseHitPos.y = 0;
-            if (!gridEnabled) pickedUpObject.transform.position = mouseHitPos;
-            else pickedUpObject.transform.position = Grid.ToGridPos(mouseHitPos);
+            if (!gridEnabled) cursorInd.transform.position = mouseHitPos;
+            else cursorInd.transform.position = Grid.ToGridPos(mouseHitPos);
 
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                ReplaceObject?.Invoke(Grid.ToGridPos(mouseHitPos), pickedUpObject.transform.rotation);
+                ReplaceObject?.Invoke(Grid.ToGridPos(mouseHitPos), pickedUpObject.phantom.transform.rotation);
                 pickedUpObject = null;
                 if (ReplaceObject == null) Debug.Log("Method not Found");
             }

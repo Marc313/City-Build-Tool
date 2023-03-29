@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3e482907a1e4e34e9aee223541b4c82, type: 3}
+  m_Name: Std Phantom Values
+  m_EditorClassIdentifier: 
+  phantomPrefab: {fileID: 7597249027278094522, guid: 51161575a255dd84fa1dcfd8bcae5e19, type: 3}
+  greenPhantom: {fileID: 2100000, guid: c5872a84dad02524894af9173d6e17f7, type: 2}
+  redPhantom: {fileID: 2100000, guid: 6cc925e8b8b2f6b4c9d2bb56d31db786, type: 2}

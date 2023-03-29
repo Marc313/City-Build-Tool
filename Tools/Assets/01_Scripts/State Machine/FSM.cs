@@ -50,5 +50,10 @@ public abstract class FSM
         }
     }
 
+    public bool HasStates()
+    {
+        return states.Count > 0;
+    }
+
     public State GetCurrentState() { return currentState; }
 }

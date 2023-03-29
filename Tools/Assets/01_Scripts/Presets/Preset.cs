@@ -89,8 +89,10 @@ public abstract class Preset
         float smallerRatio = xRatio < zRatio ? xRatio : zRatio;
         _object.transform.localScale = _object.transform.lossyScale * smallerRatio;
 
-        MeshCollider collider = objectRenderer.gameObject.AddComponent<MeshCollider>();
-        collider.convex = true;
+
+        BoxCollider collider = _object.AddComponent<BoxCollider>();
+        collider.size = new Vector3(XZSizeUnits.x / _object.transform.localScale.x, 1, XZSizeUnits.y / _object.transform.localScale.z) * 0.95f;
+        collider.center = new Vector3(0, 0.5f, 0);
 
         _object.gameObject.layer = LayerMask.NameToLayer("Building");
         objectRenderer.gameObject.layer = LayerMask.NameToLayer("Building");

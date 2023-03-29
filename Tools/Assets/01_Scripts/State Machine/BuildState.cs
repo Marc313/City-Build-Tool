@@ -10,15 +10,17 @@ public class BuildState : State
     private LayerMask groundLayer;
 
     // Building
-    private GameObject phantomObject;
+    private PhantomObject phantomObject;
     private bool gridEnabled;
     private Quaternion currentObjectRotation;
     private Action<Vector3, Quaternion> PlaceObject;
+    private BuildingCursor cursorInd;
 
-    public BuildState(LayerMask _groundLayer)
+    public BuildState(LayerMask _groundLayer, BuildingCursor _cursor)
     {
         raycaster = Raycaster.Instance;
         groundLayer = _groundLayer;
+        cursorInd = _cursor;
     }
 
     public override void OnEnter()
@@ -26,16 +28,11 @@ public class BuildState : State
         gridEnabled = scratchPad.Get<bool>("gridEnabled");
         PlaceObject = scratchPad.Get<Action<Vector3, Quaternion>>("PlaceObjectFunc");
         CursorManager.Instance.isAllowedOnScreen = false;
-
-        Preset currentGamePreset = scratchPad.Get<Preset>("currentGamePreset");
-        phantomObject = currentGamePreset.LoadInstance();
-        scratchPad.RegisterOrUpdate("phantomObject", phantomObject);
-        phantomObject.SetActive(false);
     }
 
     public override void OnExit()
     {
-        phantomObject.SetActive(false);
+        phantomObject.phantom.SetActive(false);
         phantomObject = null;
         CursorManager.Instance.isAllowedOnScreen = true;
     }
@@ -46,23 +43,41 @@ public class BuildState : State
 
     public override void OnUpdate()
     {
-        GameObject scratchPadPhantom = scratchPad.Get<GameObject>("phantomObject");
+        PhantomObject scratchPadPhantom = scratchPad.Get<PhantomObject>("phantomObject");
         if (scratchPadPhantom != phantomObject)
         {
+            if (phantomObject != null && !phantomObject.isPlaced) phantomObject.phantom.SetActive(false);
+
             phantomObject = scratchPadPhantom;
-            currentObjectRotation = phantomObject.transform.rotation;
-            phantomObject.SetActive(true);
+            currentObjectRotation = phantomObject.phantom.transform.rotation;
+            phantomObject.phantom.SetActive(true);
+        }
+        else if (scratchPadPhantom == null && phantomObject == null)
+        {
+            Preset currentGamePreset = scratchPad.Get<Preset>("currentGamePreset");
+            phantomObject = new PhantomObject(currentGamePreset.LoadInstance());
+            scratchPad.RegisterOrUpdate("phantomObject", phantomObject);
         }
 
         if (phantomObject == null) return;
 
         if (raycaster.GetRaycastHit(out hit, groundLayer))
         {
+            // Set Cursor & Phantom to mouse pos
             mouseHitPos = hit.point;
             mouseHitPos.y = 0;
-            if (!gridEnabled) phantomObject.transform.position = mouseHitPos;
-            else phantomObject.transform.position = Grid.ToGridPos(mouseHitPos);
+            if (!gridEnabled)
+            {
+                cursorInd.transform.position = mouseHitPos;
+                phantomObject.phantom.transform.position = mouseHitPos;
+            }
+            else
+            {
+                cursorInd.transform.position = Grid.ToGridPos(mouseHitPos);
+                phantomObject.phantom.transform.position = Grid.ToGridPos(mouseHitPos);
+            }
 
+            // Click Event
             if (!CursorManager.IsMouseOverUI() && Input.GetKeyDown(KeyCode.Mouse0))
             {
                 PlaceObject?.Invoke(Grid.ToGridPos(mouseHitPos), currentObjectRotation);
@@ -71,8 +86,8 @@ public class BuildState : State
         }
 
         HandleRotationInput();
-        if (CursorManager.IsMouseOverUI() && phantomObject != null) phantomObject.SetActive(false);
-        else if (phantomObject != null) phantomObject.SetActive(true);
+        if (CursorManager.IsMouseOverUI() && phantomObject != null) phantomObject.phantom.SetActive(false);
+        else if (phantomObject != null) phantomObject.phantom.SetActive(true);
     }
 
     private void HandleRotationInput()
@@ -80,7 +95,7 @@ public class BuildState : State
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             Debug.Log("Rotate");
-            currentObjectRotation = phantomObject.RotateYToRight(90);
+            currentObjectRotation = phantomObject.phantom.RotateYToRight(90);
         }
     }
 }
