@@ -41,7 +41,6 @@ public class GridManager : MonoBehaviour
 
     public void SetCellSize(float _value)
     {
-        Debug.Log("Set Cell Size!!");
         gridMaterial.SetFloat("_CellSize", _value);
         Grid.cellSize = _value;
         sizeField.text = _value.ToString();

@@ -52,15 +52,5 @@ public class DemolishState : State
                 cursorInd.colliders = null;
             }
         }
-
-        /*        if (raycaster.GetRaycastHit(out hit, buildingLayer))
-                {
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
-                    {
-                        GameObject building = hit.collider.gameObject;
-                        Debug.Log(building.name);
-                        DemolishObject?.Invoke(building);
-                    }
-                }*/
     }
 }

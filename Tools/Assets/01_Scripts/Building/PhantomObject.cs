@@ -10,17 +10,15 @@ public class PhantomObject
     public static BuildingCursor cursorIndicator;
     public bool isPlaced;
 
-    //private Material[] objectMaterials;
+    private Collider[] objectColliders;
     private Dictionary<MeshRenderer, Material[]> objectMaterials = new Dictionary<MeshRenderer, Material[]>();
-    //private GameObject phantomParent;
 
     public PhantomObject (GameObject _phantom)
     {
         phantom = _phantom;
-        phantom.GetComponentInChildren<Collider>().enabled = false;
+        objectColliders = phantom.GetComponentsInChildren<Collider>();
         cursorIndicator.gameObject.SetActive(true);
-/*        phantom._transform.parent = cursorIndicator._transform;
-        phantom._transform.localPosition = Vector3.zero;*/
+        EnableColliders(false);
         AssignPhantomMaterial();
     }
 
@@ -52,11 +50,19 @@ public class PhantomObject
                 renderer.sharedMaterials = objectMaterials[renderer];
         }
 
-        phantom.GetComponent<Collider>().enabled = true;
+        EnableColliders(true);
     }
 
     public void SetParent(Transform _transform)
     {
         phantom.transform.parent = _transform;
+    }
+
+    private void EnableColliders(bool _enabled)
+    {
+        foreach (Collider collider in objectColliders)
+        {
+            collider.enabled = _enabled;
+        }
     }
 }

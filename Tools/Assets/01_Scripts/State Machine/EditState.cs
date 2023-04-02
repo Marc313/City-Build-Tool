@@ -27,7 +27,6 @@ public class EditState : State
 
     public override void OnEnter()
     {
-        Debug.Log("Edit");
         gridEnabled = scratchPad.Get<bool>("gridEnabled");
         Pickup = scratchPad.Get<Func<GameObject, PhantomObject>>("EditFunc");
         ReplaceObject = scratchPad.Get<Action<Vector3, Quaternion>>("ReplaceFunc");

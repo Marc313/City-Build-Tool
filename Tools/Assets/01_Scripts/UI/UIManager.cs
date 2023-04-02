@@ -117,8 +117,6 @@ public class UIManager : Singleton<UIManager>
 
     public void AssignSpriteToButton(Preset _preset, Sprite _sprite)
     {
-        Debug.Log($"Assigning");
-
         if (presetButtons.ContainsKey(_preset))
         {
             Button button = presetButtons[_preset];

@@ -44,7 +44,7 @@ public class SaveManager : Singleton<SaveManager>
             builder.Reconstruct(save.builtObjects);
             FindObjectOfType<CamNavigation>()?.LoadPosition(save.cameraPosition);
 
-            Debug.Log("City Loaded!");
+            Logger.Log("City Loaded!");
             return true;
         }
         return false;

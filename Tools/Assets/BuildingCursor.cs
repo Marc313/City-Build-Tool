@@ -69,7 +69,7 @@ public class BuildingCursor : MonoBehaviour
             transform.position = Grid.ToGridPos(mouseHitPos);
         }
 
-        //CheckCollisions();
+        CheckCollisions();
     }
 
     public void EnableColoring()
@@ -82,6 +82,11 @@ public class BuildingCursor : MonoBehaviour
         childRenderer.material = normalMaterial;
         coloring = false;
         ResetScale();
+    }
+
+    public void ResetCollisions()
+    {
+        colliders = null;
     }
 
     public void SetColor(string _color)
@@ -129,10 +134,10 @@ public class BuildingCursor : MonoBehaviour
         }
         else
         {
-/*            foreach (Collider collider in colliders)
+            foreach (Collider collider in colliders)
             {
                 Debug.Log($"Collider: {collider.gameObject.name}");
-            }*/
+            }
             if (coloring) childRenderer.material = redMaterial;
         }
     }
@@ -142,4 +147,5 @@ public class BuildingCursor : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(boxCollider.center + transform.position, boxCollider.bounds.size * collisionSizeModifier);
     }
+
 }

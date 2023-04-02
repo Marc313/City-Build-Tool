@@ -58,7 +58,6 @@ public abstract class Preset
     {
         GameObject instance = LoadInstance();
         instance.transform.position = _position;
-        //phantom.transform.rotation = defaultRotation;
         return instance;
     }
     
@@ -89,7 +88,6 @@ public abstract class Preset
 
         float smallerRatio = xRatio < zRatio ? xRatio : zRatio;
         _object.transform.localScale = _object.transform.lossyScale * smallerRatio;
-
 
         BoxCollider collider = _object.AddComponent<BoxCollider>();
         collider.size = new Vector3(XZSizeUnits.x / _object.transform.localScale.x, 1, XZSizeUnits.y / _object.transform.localScale.z) * 0.95f;

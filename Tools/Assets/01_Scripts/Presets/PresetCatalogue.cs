@@ -12,12 +12,6 @@ public static class PresetCatalogue
     public static void SetDefaultPresets(List<DefaultPresetLink> _presetList, bool _addToPresets = true)
     {
         defaultPresets = _presetList;
-/*        foreach (DefaultPresetLink df in _presetList)
-        {
-            defaultPresets.Add(df);
-        }*/
-
-        if (defaultPresets != null) Debug.Log(defaultPresets.Count);
 
         if (_addToPresets)
         {

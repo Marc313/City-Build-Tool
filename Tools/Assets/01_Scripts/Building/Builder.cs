@@ -88,8 +88,6 @@ public class Builder : MonoBehaviour, IFSMOwner
                 allObjects.Add(placedBuilding, building);
             }
         }
-
-        Debug.Log("Done Reconstructing");
     }
 
     public void SetCurrentPreset(Preset _preset)
@@ -97,6 +95,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         currentGamePreset = _preset;
         cursorIndicator.SetScale(_preset);
         cursorIndicator.ResetRotation();
+        cursorIndicator.ResetCollisions();
         if (phantomObject != null)
         {
             phantomObject.phantom.SetActive(false);
@@ -162,6 +161,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         phantomObject = new PhantomObject(currentGamePreset.LoadInstance(_groundPos));
         phantomObject.phantom.transform.rotation = _currentRotation;
         sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        AudioManager.Instance.PlayBuildSound();
     }
 
     private void ReplaceObject(Vector3 _groundPos, Quaternion _currentRotation)
@@ -170,6 +170,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         allObjects.Add(phantomObject.phantom, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));
         phantomObject = null;
         sharedData.RegisterOrUpdate("phantomObject", phantomObject);
+        AudioManager.Instance.PlayBuildSound();
     }
 
     private PhantomObject EditObject(GameObject _gameObject)
