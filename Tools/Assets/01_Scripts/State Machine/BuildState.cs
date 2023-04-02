@@ -85,10 +85,11 @@ public class BuildState : State
             // Click Event
             if (!CursorManager.IsMouseOverUI() && category == Preset.Category.Road && Input.GetKey(KeyCode.Mouse0))
             {
+                Debug.Log("Previous Pos: " + previousCursorPos);
                 // Extra safety
                 if (phantomObject.phantom.transform.position != previousCursorPos)
                 {
-                    previousCursorPos = phantomObject.phantom.transform.position;
+                    previousCursorPos = cursorInd.transform.position;
                     PlacePhantom();
                 }
             }
@@ -107,6 +108,7 @@ public class BuildState : State
     {
         PlaceObject?.Invoke(Grid.ToGridPos(mouseHitPos), currentObjectRotation);
         if (PlaceObject == null) Debug.Log("Method not Found");
+        phantomObject = null;
     }
 
     private void HandleRotationInput()
