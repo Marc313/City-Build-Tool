@@ -61,6 +61,8 @@ public static class PresetCatalogue
         return prefab;
     }
 
+    //iopublic static Get
+
     public static bool PresetWithOBJNameExits(string _objName)
     {
         foreach (Preset preset in allPresets)

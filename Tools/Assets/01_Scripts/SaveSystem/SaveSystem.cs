@@ -43,12 +43,18 @@ public static class SaveSystem
         BinaryFormatter formatter = GetBinaryFormatter();
 
         string path = FilepathManager.GetSavePath();
-
-        if (path == null )
+        if (path == null)
         {
             Debug.Log("File not found, select other path!");
+            return false;
         }
-        else if (path != null && path != string.Empty)
+
+        if (!File.Exists(path))
+        {
+            SaveAs(_data);
+        }
+
+        if (path != null && path != string.Empty)
         {
             FileStream file = File.Create(path);
             formatter.Serialize(file, _data);
@@ -73,6 +79,7 @@ public static class SaveSystem
                 object save = formatter.Deserialize(file);
                 file.Flush();
                 file.Close();
+                fileName = (save as SaveData).projectName;
                 return (SaveData)save;
             }
             catch

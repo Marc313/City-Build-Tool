@@ -19,7 +19,7 @@ public class BuildingModeFSM : FSM
     {
         states.Add(typeof(BuildState), new BuildState(groundLayers, cursor));
         states.Add(typeof(EditState), new EditState(groundLayers, buildingLayers, cursor));
-        states.Add(typeof(DemolishState), new DemolishState(buildingLayers));
+        states.Add(typeof(DemolishState), new DemolishState(buildingLayers, cursor));
 
         foreach (State state in states.Values)
         {

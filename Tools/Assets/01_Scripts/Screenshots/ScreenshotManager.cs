@@ -2,6 +2,7 @@ using MarcoHelpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class ScreenshotManager : Singleton<ScreenshotManager>
@@ -28,6 +29,7 @@ public class ScreenshotManager : Singleton<ScreenshotManager>
 
     public void ScreenshotAllPresets(List<Preset> _presets)
     {
+        FilepathManager.CreateScreenshotDirectory();
         StartCoroutine(nameof(ScreenshotAllPresetsRoutine), _presets);
     }
 

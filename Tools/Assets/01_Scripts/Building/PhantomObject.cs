@@ -17,7 +17,7 @@ public class PhantomObject
     public PhantomObject (GameObject _phantom)
     {
         phantom = _phantom;
-        phantom.GetComponent<Collider>().enabled = false;
+        phantom.GetComponentInChildren<Collider>().enabled = false;
         cursorIndicator.gameObject.SetActive(true);
 /*        phantom._transform.parent = cursorIndicator._transform;
         phantom._transform.localPosition = Vector3.zero;*/

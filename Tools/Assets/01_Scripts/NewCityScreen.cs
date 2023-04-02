@@ -31,6 +31,7 @@ public class NewCityScreen : Menu
         SaveSystem.fileName = name;
         FilepathManager.projectName = name;
         FilepathManager.CreateUserModelDirectory();
+        FilepathManager.CreateScreenshotDirectory();
         SaveManager.Instance.Save(true);
         //string folderPath = folderField.text;
 

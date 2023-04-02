@@ -20,7 +20,7 @@ public static class FilepathManager
         }
     }
 
-    private static string GetScreenshotFolder()
+    public static string GetScreenshotFolder()
     {
         return Path.Combine(GetApplicationDirectory(), screenshotPath);
     }
@@ -42,6 +42,15 @@ public static class FilepathManager
     public static void CreateUserModelDirectory()
     {
         string path = GetUserModelDirectory();
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+    }
+
+    public static void CreateScreenshotDirectory()
+    {
+        string path = GetScreenshotFolder();
         if (!Directory.Exists(path))
         {
             Directory.CreateDirectory(path);

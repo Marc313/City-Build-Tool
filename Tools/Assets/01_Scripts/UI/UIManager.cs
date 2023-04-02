@@ -96,7 +96,7 @@ public class UIManager : Singleton<UIManager>
     public void ShowBuilderUI()
     {
         presetMenu.SetActive(true);
-        presetWindow.MoveUp();
+        presetWindow.Hide();
         quickUI.SetActive(true);
         buildModeTab.SetActive(true);
     }

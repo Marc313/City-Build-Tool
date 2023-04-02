@@ -1,4 +1,5 @@
 using System;
+using System.Windows.Forms;
 using UnityEngine;
 
 public class DemolishState : State
@@ -10,12 +11,13 @@ public class DemolishState : State
 
     // Demolish
     private Action<GameObject> DemolishObject;
+    private BuildingCursor cursorInd;
 
-
-    public DemolishState(LayerMask _buildingLayer) 
+    public DemolishState(LayerMask _buildingLayer, BuildingCursor _cursor) 
     { 
         buildingLayer = _buildingLayer;
         raycaster = Raycaster.Instance;
+        cursorInd = _cursor;
     }
 
 
@@ -39,14 +41,26 @@ public class DemolishState : State
 
     public override void OnUpdate()
     {
-        if (raycaster.GetRaycastHit(out hit, buildingLayer))
+        if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (cursorInd.colliders != null)
             {
-                GameObject building = hit.collider.gameObject;
-                Debug.Log(building.name);
-                DemolishObject?.Invoke(building);
+                foreach (Collider collider in cursorInd.colliders)
+                {
+                    DemolishObject?.Invoke(collider.gameObject);
+                }
+                cursorInd.colliders = null;
             }
         }
+
+        /*        if (raycaster.GetRaycastHit(out hit, buildingLayer))
+                {
+                    if (Input.GetKeyDown(KeyCode.Mouse0))
+                    {
+                        GameObject building = hit.collider.gameObject;
+                        Debug.Log(building.name);
+                        DemolishObject?.Invoke(building);
+                    }
+                }*/
     }
 }

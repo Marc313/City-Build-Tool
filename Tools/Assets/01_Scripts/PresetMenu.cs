@@ -92,7 +92,7 @@ public class PresetMenu : Menu
         MarcoHelpers.EventSystem.RaiseEvent(EventName.MENU_OPENED);
         isEnabled = true;
         gameObject.SetActive(true);
-        FindObjectOfType<AnimatedWindow>().MoveDown();
+        FindObjectOfType<AnimatedWindow>().Show();
     }
 
     public void CloseMenu()

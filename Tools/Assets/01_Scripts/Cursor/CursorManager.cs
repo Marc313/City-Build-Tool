@@ -32,7 +32,7 @@ public class CursorManager : Singleton<CursorManager>
 
     private void Update()
     {
-        if (isMenuOpen || IsMouseOverUI() || true)
+        if (isMenuOpen || IsMouseOverUI())
         {
             Cursor.visible = true;
         }

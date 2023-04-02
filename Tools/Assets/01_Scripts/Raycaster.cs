@@ -3,6 +3,7 @@ using UnityEngine;
 public class Raycaster : Singleton<Raycaster>
 {
     public float raycastRange = 50f;
+    public LayerMask groundLayer;
     private Camera mainCam;
 
     private void Awake()

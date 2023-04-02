@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Builder : MonoBehaviour, IFSMOwner
@@ -146,6 +147,13 @@ public class Builder : MonoBehaviour, IFSMOwner
 
     private void PlaceObject(Vector3 _groundPos, Quaternion _currentRotation)
     {
+        if (cursorIndicator.isInCollision)
+        {
+            // Play error sound
+            //Logger.Log("An object is already placed here!");
+            return;
+        }
+
         if (phantomObject == null) phantomObject = new PhantomObject(sharedData.Get<GameObject>("phantomObject"));
         phantomObject.PlaceObject();
         phantomObject.SetParent(transform);

@@ -12,6 +12,7 @@ public class EditState : State
     private Func<GameObject, PhantomObject> Pickup;
     private Action<Vector3, Quaternion> ReplaceObject;
 
+    private Quaternion currentObjectRotation;
     private PhantomObject pickedUpObject;
     private bool gridEnabled;
     private BuildingCursor cursorInd;
@@ -45,6 +46,13 @@ public class EditState : State
     // More inheritence! All states now alike
     public override void OnUpdate()
     {
+        raycaster.GetRaycastHit(out hit, groundLayer);
+        mouseHitPos = hit.point;
+        mouseHitPos.y = 0;
+
+        if (!gridEnabled) cursorInd.transform.position = mouseHitPos;
+        else cursorInd.transform.position = Grid.ToGridPos(mouseHitPos);
+
         if (pickedUpObject == null)
         {
             if (raycaster.GetRaycastHit(out hit, buildingLayer))
@@ -54,16 +62,19 @@ public class EditState : State
                     GameObject building = hit.collider.gameObject;
                     Debug.Log(building.name);
                     if (Pickup != null)
-                    pickedUpObject = Pickup.Invoke(building);
+                    {
+                        pickedUpObject = Pickup.Invoke(building);
+                        currentObjectRotation = pickedUpObject.phantom.transform.rotation;
+                    }
+
                 }
             }
         }
         else if (raycaster.GetRaycastHit(out hit, groundLayer))
         {
-            mouseHitPos = hit.point;
-            mouseHitPos.y = 0;
-            if (!gridEnabled) cursorInd.transform.position = mouseHitPos;
-            else cursorInd.transform.position = Grid.ToGridPos(mouseHitPos);
+
+            if (!gridEnabled) pickedUpObject.phantom.transform.position = mouseHitPos;
+            else pickedUpObject.phantom.transform.position = Grid.ToGridPos(mouseHitPos);
 
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
@@ -71,6 +82,16 @@ public class EditState : State
                 pickedUpObject = null;
                 if (ReplaceObject == null) Debug.Log("Method not Found");
             }
+        }
+
+        HandleRotationInput();
+    }
+
+    private void HandleRotationInput()
+    {
+        if (pickedUpObject != null && Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            currentObjectRotation = pickedUpObject.phantom.RotateYToRight(90);
         }
     }
 

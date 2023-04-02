@@ -1,53 +1,40 @@
-using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class AnimatedWindow : MovingObject
 {
-    public bool isDown;
-    public bool isMoving;
     public float animationDuration = 0.5f;
+    public Transform destination;
+    public UnityEvent onAnimation;
 
-    private Vector3 upPos;
-    private Vector3 downPos;
-
-    private Task currentTask;
+    private Vector3 startPos;
+    private Vector3 destinationPos;
+    private bool isShown = true;
+    private bool isMoving;
 
     private void OnEnable()
     {
-        upPos = transform.position;
-        downPos = transform.position;
-        downPos.y = -720 + 540;
+        startPos = transform.position;
+        destinationPos = destination.position;
+        Hide();
     }
 
-    private async void Update()
+    public void Hide()
     {
-        if (currentTask != null && !currentTask.IsCompleted) await currentTask;
-
-        if (!isDown && Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            MoveDown();
-        }
-
-        if (isDown && Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            MoveUp();
-        }
-    }
-
-    public void MoveUp()
-    {
-        if (!isDown || isMoving) return;
-        isDown = false;
+        if (!isShown || isMoving) return;
+        isShown = false;
         isMoving = true;
-        currentTask = MoveToInSeconds(downPos, upPos, animationDuration, () => isMoving = false);
+        onAnimation?.Invoke();
+        MoveToInSeconds(startPos, destinationPos, animationDuration, () => isMoving = false);
     }
 
-    public void MoveDown()
+    public void Show()
     {
-        if (isDown || isMoving) return;
+        if (isShown || isMoving) return;
 
-        isDown = true;
+        isShown = true;
         isMoving = true;
-        currentTask = MoveToInSeconds(upPos, downPos, animationDuration, () => isMoving = false);
+        onAnimation?.Invoke();
+        MoveToInSeconds(destinationPos, startPos, animationDuration, () => isMoving = false);
     }
 }
