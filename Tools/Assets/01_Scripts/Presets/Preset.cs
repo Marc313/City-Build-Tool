@@ -22,17 +22,18 @@ public abstract class Preset
 
         UIManager.Instance.AddPresetButton(this);
     }
-/*
+
     public override bool Equals(object obj)
     {
         Preset other = obj as Preset;
         if (this != null && other != null
-            && (this.presetName == other.presetName)) {
+            && (this.presetName == other.presetName))
+        {
             return true;
         }
 
         return false;
-    }*/
+    }
 
     public enum Category
     {

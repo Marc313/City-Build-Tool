@@ -16,5 +16,5 @@ MonoBehaviour:
     presetID: 0
     presetName: Bench
     category: 3
-    XZSizeUnits: {x: 1, y: 1}
+    XZSizeUnits: {x: 0.5, y: 1}
   prefab: {fileID: 100000, guid: b7b25ddf67459694cbc4f58af76945b2, type: 3}

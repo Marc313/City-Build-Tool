@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BuildingCursor : MonoBehaviour
@@ -8,6 +9,7 @@ public class BuildingCursor : MonoBehaviour
     [SerializeField] private BoxCollider boxCollider;
     [SerializeField] private Material normalMaterial;
     [SerializeField] private Material redMaterial;
+    [SerializeField] private Material blueMaterial;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask buildingLayer;
     [SerializeField] private float collisionSizeModifier = 0.85f;
@@ -40,6 +42,11 @@ public class BuildingCursor : MonoBehaviour
     public void ResetScale()
     {
         transform.localScale = new Vector3(1, 1, 1);
+    }
+
+    public void ResetRotation()
+    {
+        transform.rotation = Quaternion.identity;
     }
 
     private void Update()
@@ -75,6 +82,23 @@ public class BuildingCursor : MonoBehaviour
         childRenderer.material = normalMaterial;
         coloring = false;
         ResetScale();
+    }
+
+    public void SetColor(string _color)
+    {
+        switch(_color.ToLower())
+        {
+            case "blue":
+                childRenderer.material = blueMaterial;
+                break;
+            case "red":
+                childRenderer.material = redMaterial;
+                break;
+            case "white":
+            default:
+                childRenderer.material = normalMaterial;
+                break;
+        }
     }
 
     private void OnTriggerEnter(Collider _other)

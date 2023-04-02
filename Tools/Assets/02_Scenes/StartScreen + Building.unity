@@ -5090,6 +5090,7 @@ MonoBehaviour:
   boxCollider: {fileID: 1924493602}
   normalMaterial: {fileID: 2100000, guid: 6cb702285cb75d946beb2741b8bae312, type: 2}
   redMaterial: {fileID: 2100000, guid: 18772aab72c18b546a83358b8335adab, type: 2}
+  blueMaterial: {fileID: 2100000, guid: c3a3b9caaf7b51a48993ec65e45620b7, type: 2}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64

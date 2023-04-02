@@ -96,6 +96,7 @@ public class Builder : MonoBehaviour, IFSMOwner
     {
         currentGamePreset = _preset;
         cursorIndicator.SetScale(_preset);
+        cursorIndicator.ResetRotation();
         if (phantomObject != null)
         {
             phantomObject.phantom.SetActive(false);
@@ -149,12 +150,10 @@ public class Builder : MonoBehaviour, IFSMOwner
     {
         if (cursorIndicator.isInCollision)
         {
-            // Play error sound
-            //Logger.Log("An object is already placed here!");
             return;
         }
 
-        if (phantomObject == null) phantomObject = new PhantomObject(sharedData.Get<GameObject>("phantomObject"));
+        if (phantomObject == null) phantomObject = sharedData.Get<PhantomObject>("phantomObject");
         phantomObject.PlaceObject();
         phantomObject.SetParent(transform);
         allObjects.Add(phantomObject.phantom, new PlacedObject(currentGamePreset, _groundPos, _currentRotation));

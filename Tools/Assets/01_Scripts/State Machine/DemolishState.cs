@@ -25,13 +25,13 @@ public class DemolishState : State
     {
         CursorManager.Instance.isAllowedOnScreen = true;
         DemolishObject = scratchPad.Get<Action<GameObject>>("DemolishFunc");
-
-        Debug.Log("Demolish");
+        cursorInd.SetColor("red");
     }
 
     public override void OnExit()
     {
         CursorManager.Instance.isAllowedOnScreen = false;
+        cursorInd.SetColor("white");
     }
 
     public override void OnFixedUpdate()

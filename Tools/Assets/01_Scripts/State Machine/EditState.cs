@@ -31,12 +31,14 @@ public class EditState : State
         gridEnabled = scratchPad.Get<bool>("gridEnabled");
         Pickup = scratchPad.Get<Func<GameObject, PhantomObject>>("EditFunc");
         ReplaceObject = scratchPad.Get<Action<Vector3, Quaternion>>("ReplaceFunc");
+        cursorInd.SetColor("blue");
     }
 
     public override void OnExit()
     {
         // Restore original position
         pickedUpObject = null;
+        cursorInd.SetColor("white");
     }
 
     public override void OnFixedUpdate()
@@ -55,18 +57,12 @@ public class EditState : State
 
         if (pickedUpObject == null)
         {
-            if (raycaster.GetRaycastHit(out hit, buildingLayer))
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                if (Input.GetKeyDown(KeyCode.Mouse0))
+                Collider[] cursorColliders = cursorInd.colliders;
+                if (cursorColliders != null && cursorColliders.Length > 0)
                 {
-                    GameObject building = hit.collider.gameObject;
-                    Debug.Log(building.name);
-                    if (Pickup != null)
-                    {
-                        pickedUpObject = Pickup.Invoke(building);
-                        currentObjectRotation = pickedUpObject.phantom.transform.rotation;
-                    }
-
+                    pickedUpObject = Pickup?.Invoke(cursorColliders[0].gameObject);
                 }
             }
         }
@@ -92,6 +88,7 @@ public class EditState : State
         if (pickedUpObject != null && Input.GetKeyDown(KeyCode.Mouse1))
         {
             currentObjectRotation = pickedUpObject.phantom.RotateYToRight(90);
+            cursorInd.gameObject.RotateYToRight(90);
         }
     }
 

@@ -177,7 +177,6 @@ public class UIManager : Singleton<UIManager>
         return buttonParent;
     }
 
-
     private void OnTabChanged(object _value = null)
     {
         if (uiLists == null) return;

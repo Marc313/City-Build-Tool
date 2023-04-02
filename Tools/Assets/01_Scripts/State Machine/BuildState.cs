@@ -38,6 +38,7 @@ public class BuildState : State
         phantomObject = null;
         CursorManager.Instance.isAllowedOnScreen = true;
         cursorInd.DisableColoring();
+        cursorInd.ResetRotation();
     }
 
     public override void OnFixedUpdate()
@@ -114,6 +115,7 @@ public class BuildState : State
         {
             Debug.Log("Rotate");
             currentObjectRotation = phantomObject.phantom.RotateYToRight(90);
+            cursorInd.gameObject.RotateYToRight(90);
         }
     }
 }
