@@ -8,19 +8,22 @@ public class Builder : MonoBehaviour, IFSMOwner
 {
     public ScratchPad sharedData { get; private set; } = new ScratchPad();
 
+    [Header("Initialization")]
     public PresetLibrary library;
-    public bool isGridEnabled;
     public sPhantomObjectValues phantomValues;
-    public BuildingCursor cursorIndicator;
+    public bool isGridEnabled;
 
+    [Header("References")]
     [SerializeField] private LayerMask groundLayers;
     [SerializeField] private LayerMask buildingLayers;
+    [SerializeField] private BuildingCursor cursorIndicator;
+    [SerializeField] private BuildModeTab buildModeTab;
 
+    private Vector3 mouseHitPos;
     private Dictionary<GameObject, PlacedObject> allObjects = new Dictionary<GameObject, PlacedObject>();
     private Preset currentGamePreset;
     private PhantomObject phantomObject;
     private BuildingModeFSM fsm;
-    [HideInInspector] public Vector3 mouseHitPos;
 
     private bool hasStarted;
 
@@ -53,9 +56,12 @@ public class Builder : MonoBehaviour, IFSMOwner
 
     private void Update()
     {
-        if (UIManager.Instance.isMenuOpen) return;
+        HandleBuildmodeInput();
 
-        fsm?.OnUpdate();
+        if (!UIManager.Instance.isMenuOpen)
+        {
+            fsm?.OnUpdate();
+        }
     }
 
     private void FixedUpdate()
@@ -104,7 +110,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         if (fsm != null && fsm.HasStates()
             && fsm.GetCurrentState()?.GetType() != typeof(BuildState)) {
             fsm.SwitchState(typeof(BuildState));
-            FindObjectOfType<BuildModeTab>().SetState<BuildState>();
+            buildModeTab.SetState<BuildState>();
         }
 
         phantomObject = new PhantomObject(currentGamePreset.LoadInstance());
@@ -164,6 +170,28 @@ public class Builder : MonoBehaviour, IFSMOwner
         AudioManager.Instance.PlayBuildSound();
     }
 
+    private void HandleBuildmodeInput()
+    {
+        if (fsm == null) return;
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            fsm.SwitchState(typeof(BuildState));
+            buildModeTab.SetState<BuildState>();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            fsm.SwitchState(typeof(EditState));
+            buildModeTab.SetState<EditState>();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            fsm.SwitchState(typeof(DemolishState));
+            buildModeTab.SetState<DemolishState>();
+        }
+    }
+
+
     private void ReplaceObject(Vector3 _groundPos, Quaternion _currentRotation)
     {
         phantomObject.PlaceObject();
@@ -207,6 +235,7 @@ public class Builder : MonoBehaviour, IFSMOwner
         {
             allObjects.Remove(fullObject);
         }
+        AudioManager.Instance.PlayRemoveSound();
         Destroy(fullObject);
     }
 }

@@ -121,7 +121,7 @@ public class UIManager : Singleton<UIManager>
         {
             Button button = presetButtons[_preset];
             button.image.sprite = _sprite;
-            button.GetComponentInChildren<TMP_Text>()?.gameObject.SetActive(false);
+            //button.GetComponentInChildren<TMP_Text>()?.gameObject.SetActive(false);
         }
         else
         {

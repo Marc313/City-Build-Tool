@@ -41,7 +41,8 @@ public abstract class FSM
 
     public void SwitchState(Type stateType)
     {
-        if (states.ContainsKey(stateType))
+        if (states.ContainsKey(stateType) 
+            && stateType.GetType() != currentState.GetType())
         {
             currentState?.OnExit();
             State newState = states[stateType];
